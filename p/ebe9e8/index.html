@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-120437925-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>JVM之类加载 | Yunhao&#39;s Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="加载.class文件的方式java源码将编译为.class文件，那么加载.class有几种方式呢？  从本地系统中直接加载 通过网络下载.class文件 从zip，jar等归档文件中加载.class文件 从专有数据库中提取.class文件 将Java源文件动态编译为.class文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM之类加载">
+<meta property="og:url" content="http://caoyunhao.com/p/ebe9e8/index.html">
+<meta property="og:site_name" content="Yunhao&#39;s Home">
+<meta property="og:description" content="加载.class文件的方式java源码将编译为.class文件，那么加载.class有几种方式呢？  从本地系统中直接加载 通过网络下载.class文件 从zip，jar等归档文件中加载.class文件 从专有数据库中提取.class文件 将Java源文件动态编译为.class文件">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-14T17:54:13.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM之类加载">
+<meta name="twitter:description" content="加载.class文件的方式java源码将编译为.class文件，那么加载.class有几种方式呢？  从本地系统中直接加载 通过网络下载.class文件 从zip，jar等归档文件中加载.class文件 从专有数据库中提取.class文件 将Java源文件动态编译为.class文件">
+  
+    <link rel="alternate" href="/atom.xml" title="Yunhao&#39;s Home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://s1.ax1x.com/2018/06/09/CbgQqs.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div class="no-js">
+    未开启JavaScript，可能会影响部分功能。
+    <script>
+        (function () {
+            const node = document.getElementsByClassName("no-js").item(0);
+            node.parentNode.removeChild(node)
+        })();
+    </script>
+  </div>
+  <div id="container">
+    <div id="wrap">
+
+      <div class="outer body">
+        <input type="checkbox" id="mobile-menu-input">
+<label class="mobile-wrap" for="mobile-menu-input"></label>
+<div class="mobile" for="mobile-menu-input">
+    <label class="mobile-label" for="mobile-menu-input" style="float: right">
+        <div class="mobile-label-1">
+            <div class="mobile-label-2">
+                <div class="mobile-label-3">
+
+                </div>
+            </div>
+        </div>
+    </label>
+    <div class="mobile-menu" for="mobile-menu-input">
+<!--        <a href="/">回到主页</a>-->
+        <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+    </div>
+</div>
+        
+          <div class="home-sidebar">
+            <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+          </div>
+        
+        <section id="main"><article id="post-ebe9e8" class="article article-type-post" itemscope
+         itemprop="blogPost">
+    
+    <div class="article-meta indent">
+    
+    <!--<a href="/p/ebe9e8/" class="article-date">-->
+  <!--<time datetime="2018-04-18T16:00:00.000Z" itemprop="datePublished">2018-04-19</time>-->
+<!--</a>-->
+<div class="article-date">
+  <time datetime="2018-04-18T16:00:00.000Z" itemprop="datePublished">2018-04-19</time>
+</div>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/category/technology/">技术</a>►<a class="article-category-link" href="/category/technology/java/">Java</a>►<a class="article-category-link" href="/category/technology/java/jvm/">JVM</a>
+  </div>
+
+    </div>
+    
+    <div class="article-inner">
+    
+    
+    
+        <header class="article-header">
+    
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JVM之类加载
+    </h1>
+  
+
+    
+    <div style="display: flex; flex-direction: row; align-items: center; position: relative">
+    <div>
+        <label data-url="http://caoyunhao.com/p/ebe9e8/" data-id="ck7rwt8mf003ytpjc1eupqv1f" for="share-box-ck7rwt8mf003ytpjc1eupqv1f"
+               class="article-share-link"></label>
+    </div>
+    <input type="checkbox" id="share-box-ck7rwt8mf003ytpjc1eupqv1f" role="button" class="check-box-switch">
+    <div class="article-share-box">
+        <!--<input class="article-share-input" value="http://caoyunhao.com/p/ebe9e8/">-->
+        <div class="article-share-links">
+            <a href="https://twitter.com/intent/tweet?url=' + http://caoyunhao.com/p/ebe9e8/ + '" class="article-share-twitter" target="_blank"
+               title="Twitter"></a>
+            <a href="https://www.facebook.com/sharer.php?u=' + http://caoyunhao.com/p/ebe9e8/ + '" class="article-share-facebook"
+               target="_blank" title="Facebook"></a>
+            <a href="http://pinterest.com/pin/create/button/?url=' + http://caoyunhao.com/p/ebe9e8/ + '" class="article-share-pinterest"
+               target="_blank" title="Pinterest"></a>
+            <a href="https://plus.google.com/share?url=' + http://caoyunhao.com/p/ebe9e8/ + '" class="article-share-google" target="_blank"
+               title="Google+"></a>
+        </div>
+    </div>
+</div>
+</header>
+    
+        <div class="article-entry" itemprop="articleBody">
+            
+                <h3 id="加载-class文件的方式"><a href="#加载-class文件的方式" class="headerlink" title="加载.class文件的方式"></a>加载.class文件的方式</h3><p>java源码将编译为.class文件，那么加载.class有几种方式呢？</p>
+<ul>
+<li>从本地系统中直接加载</li>
+<li>通过网络下载.class文件</li>
+<li>从zip，jar等归档文件中加载.class文件</li>
+<li>从专有数据库中提取.class文件</li>
+<li>将Java源文件动态编译为.class文件</li>
+</ul>
+<a id="more"></a>
+<h3 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h3><p>包括 <strong>加载</strong>、<strong>验证</strong>、<strong>准备</strong>、<strong>解析</strong>、<strong>初始化</strong> 五个阶段。</p>
+<p>在这五个阶段中，<strong>加载</strong>、<strong>验证</strong>、<strong>准备</strong>和<strong>初始化</strong>这四个阶段发生的顺序是确定的，而<strong>解析阶段</strong>则不一定，它在某些情况下可以在<strong>初始化阶段</strong>之后开始，这是为了支持Java语言的运行时绑定（也成为动态绑定或晚期绑定）。另外注意这里的几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常都是互相交叉地混合进行的，通常在一个阶段执行的过程中调用或激活另一个阶段。</p>
+<h4 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h4><p>为类的静态变量分配内存，并将其初始化为默认值</p>
+<ul>
+<li>这时候进行内存分配的仅包括类变量（static）。</li>
+<li>这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。比如 <code>static int value = 3;</code> 初始化后 <code>value</code>的值为 <code>0</code>。而 <code>static final int value = 3;</code> 初始化后 <code>value</code>的值为 <code>3</code>。</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>对基本数据类型来说，对于类变量（static）和全局变量，如果不显式地对其赋值而直接使用，则系统会为其赋予默认的零值，而对于局部变量来说，在使用前必须显式地为其赋值，否则编译时不通过。</li>
+<li>对于同时被static和final修饰的常量，必须在声明的时候就为其显式地赋值，否则编译时不通过；而只被final修饰的常量则既可以在声明时显式地为其赋值，也可以在类初始化时显式地为其赋值，总之，在使用前必须为其显式地赋值，系统不会为其赋予默认零值。<br>-对于引用数据类型reference来说，如数组引用、对象引用等，如果没有对其进行显式地赋值而直接使用，系统都会为其赋予默认的零值，即null。</li>
+<li>如果在数组初始化时没有对数组中的各元素赋值，那么其中的元素将根据对应的数据类型而被赋予默认的零值。</li>
+</ul>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p>为类的静态变量赋予正确的初始值</p>
+<ul>
+<li>声明类变量是指定初始值</li>
+<li>使用 <strong>静态代码块</strong> 为类变量指定初始值</li>
+</ul>
+<h5 id="JVM-初始化步骤"><a href="#JVM-初始化步骤" class="headerlink" title="JVM 初始化步骤"></a>JVM 初始化步骤</h5><ul>
+<li>假如这个类还没有被加载和连接，则程序先加载并连接该类</li>
+<li>假如该类的直接父类还没有被初始化，则先初始化其直接父类</li>
+<li>假如类中有初始化语句，则系统依次执行这些初始化语句</li>
+</ul>
+<h5 id="类初始化时机"><a href="#类初始化时机" class="headerlink" title="类初始化时机"></a>类初始化时机</h5><p>只有当对类的主动使用的时候才会导致类的初始化，类的主动使用包括以下六种：</p>
+<ul>
+<li>创建类的实例，也就是 <code>new</code> 的方式</li>
+<li>访问某个类或接口的静态变量，或者对该静态变量赋值</li>
+<li>调用类的静态方法</li>
+<li>反射（如 <code>Class.forName(&quot;com.shengsiyuan.Test&quot;)</code>）</li>
+<li>初始化某个类的子类，则其父类也会被初始化</li>
+<li>Java虚拟机启动时被标明为启动类的类( <code>JavaTest</code> )，直接使用 <code>java.exe</code> 命令来运行某个主类</li>
+</ul>
+<h4 id="结束生命周期"><a href="#结束生命周期" class="headerlink" title="结束生命周期"></a>结束生命周期</h4><p>在如下几种情况下，Java虚拟机将结束生命周期</p>
+<ul>
+<li>执行了 System.exit()方法</li>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
+</ul>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassLoader loader = Thread.currentThread().getContextClassLoader();</span><br><span class="line">System.out.println(loader);</span><br><span class="line">System.out.println(loader.getParent());</span><br><span class="line">System.out.println(loader.getParent().getParent());</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sun.misc.Launche r$AppClassLoader@<span class="number">64f</span>ef26a</span><br><span class="line">sun.misc.Launcher$ExtClassLoader@<span class="number">1</span>ddd40f3</span><br><span class="line"><span class="keyword">null</span></span><br></pre></td></tr></table></figure>
+<p><code>BootstrapLoader</code>（引导类加载器）是用C语言实现的，所以返回为<code>null</code></p>
+<ul>
+<li><strong>启动类加载器</strong>： <code>BootstrapClassLoader</code>，负责加载存放在 <code>JDK\jre\lib</code>(JDK代表JDK的安装目录，下同)下，或被 -Xbootclasspath参数指定的路径中的，并且能被虚拟机识别的类库（如<code>rt.jar</code>，所有的<code>java.</code>开头的类均被 <code>BootstrapClassLoader</code>加载）。启动类加载器是无法被Java程序直接引用的。</li>
+<li><strong>扩展类加载器</strong>： <code>ExtensionClassLoader</code>，该加载器由 <code>sun.misc.Launcher$ExtClassLoader</code>实现，它负责加载 <code>JDK\jre\lib\ext</code>目录中，或者由 <code>java.ext.dirs</code>系统变量指定的路径中的所有类库（<code>如javax.</code>开头的类），开发者可以直接使用扩展类加载器。</li>
+<li><strong>应用程序类加载器</strong>： <code>ApplicationClassLoader</code>，该类加载器由 <code>sun.misc.Launcher$AppClassLoader</code>来实现，它负责加载用户类路径（<code>ClassPath</code>）所指定的类，开发者可以直接使用该类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</li>
+</ul>
+<h3 id="JVM类加载机制"><a href="#JVM类加载机制" class="headerlink" title="JVM类加载机制"></a>JVM类加载机制</h3><ul>
+<li><strong>全盘负责</strong>，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li>
+<li><strong>父类委托</strong>，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li>
+<li><strong>缓存机制</strong>，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么++修改了Class后，必须重启JVM，程序的修改才会生效++</li>
+</ul>
+<h3 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h3><h4 id="类加载的三种方式"><a href="#类加载的三种方式" class="headerlink" title="类加载的三种方式"></a>类加载的三种方式</h4><ol>
+<li>命令行启动应用时候由JVM初始化加载</li>
+<li>通过<code>Class.forName()</code>方法动态加载</li>
+<li>通过<code>ClassLoader.loadClass()</code>方法动态加载</li>
+</ol>
+<h4 id="Class-forName-和ClassLoader-loadClass-区别"><a href="#Class-forName-和ClassLoader-loadClass-区别" class="headerlink" title="Class.forName()和ClassLoader.loadClass()区别"></a><code>Class.forName()</code>和<code>ClassLoader.loadClass()</code>区别</h4><ul>
+<li><code>Class.forName()</code>：将类的<code>.class</code>文件加载到JVM中之外，还会对类进行解释，执行类中的<code>static块</code></li>
+<li><code>ClassLoader.loadClass()</code>：只干一件事情，就是将<code>.class</code>文件加载到JVM中，不会执行<code>static块</code>中的内容,只有在<code>newInstance()</code>才会去执行<code>static块</code></li>
+<li><code>Class.forName(name,initialize,loader)</code>带参函数也可控制是否加载<code>static块</code>。并且只有调用了<code>newInstance()</code>方法采用调用构造函数，创建类的对象</li>
+</ul>
+<h3 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h3><h4 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h4><p>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把请求委托给 <strong>父加载器</strong> 去完成，</p>
+<h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h4><ol>
+<li>当<code>AppClassLoader</code>加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器<code>ExtClassLoader</code>去完成。</li>
+<li>当<code>ExtClassLoader</code>加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给<code>BootStrapClassLoader</code>去完成。</li>
+<li>如果<code>BootStrapClassLoader</code>加载失败（例如在 <code>$JAVA_HOME/jre/lib</code>里未查找到该class），会使用 ExtClassLoader来尝试加载；</li>
+<li>若<code>ExtClassLoader</code>也加载失败，则会使用 <code>AppClassLoader</code>来加载，如果 <code>AppClassLoader</code>也加载失败，则会报出异常 <code>ClassNotFoundException</code>。</li>
+</ol>
+<h3 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+            
+        </div>
+    </div>
+
+</article>
+</section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

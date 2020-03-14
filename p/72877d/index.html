@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-120437925-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>String的加法, StringBuilder, StringBuffer | Yunhao&#39;s Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在我们编写Java代码过程中，经常有拼接字符串的需求，通常有三种方法：  直接使用&amp;quot;+&amp;quot;操作 使用StringBuilder 使用StringBuffer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="String的加法, StringBuilder, StringBuffer">
+<meta property="og:url" content="http://caoyunhao.com/p/72877d/index.html">
+<meta property="og:site_name" content="Yunhao&#39;s Home">
+<meta property="og:description" content="在我们编写Java代码过程中，经常有拼接字符串的需求，通常有三种方法：  直接使用&amp;quot;+&amp;quot;操作 使用StringBuilder 使用StringBuffer">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-14T17:54:13.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="String的加法, StringBuilder, StringBuffer">
+<meta name="twitter:description" content="在我们编写Java代码过程中，经常有拼接字符串的需求，通常有三种方法：  直接使用&amp;quot;+&amp;quot;操作 使用StringBuilder 使用StringBuffer">
+  
+    <link rel="alternate" href="/atom.xml" title="Yunhao&#39;s Home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://s1.ax1x.com/2018/06/09/CbgQqs.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div class="no-js">
+    未开启JavaScript，可能会影响部分功能。
+    <script>
+        (function () {
+            const node = document.getElementsByClassName("no-js").item(0);
+            node.parentNode.removeChild(node)
+        })();
+    </script>
+  </div>
+  <div id="container">
+    <div id="wrap">
+
+      <div class="outer body">
+        <input type="checkbox" id="mobile-menu-input">
+<label class="mobile-wrap" for="mobile-menu-input"></label>
+<div class="mobile" for="mobile-menu-input">
+    <label class="mobile-label" for="mobile-menu-input" style="float: right">
+        <div class="mobile-label-1">
+            <div class="mobile-label-2">
+                <div class="mobile-label-3">
+
+                </div>
+            </div>
+        </div>
+    </label>
+    <div class="mobile-menu" for="mobile-menu-input">
+<!--        <a href="/">回到主页</a>-->
+        <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+    </div>
+</div>
+        
+          <div class="home-sidebar">
+            <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+          </div>
+        
+        <section id="main"><article id="post-72877d" class="article article-type-post" itemscope
+         itemprop="blogPost">
+    
+    <div class="article-meta indent">
+    
+    <!--<a href="/p/72877d/" class="article-date">-->
+  <!--<time datetime="2018-09-16T12:00:00.000Z" itemprop="datePublished">2018-09-16</time>-->
+<!--</a>-->
+<div class="article-date">
+  <time datetime="2018-09-16T12:00:00.000Z" itemprop="datePublished">2018-09-16</time>
+</div>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/category/technology/">技术</a>►<a class="article-category-link" href="/category/technology/java/">Java</a>►<a class="article-category-link" href="/category/technology/java/api/">api</a>
+  </div>
+
+    </div>
+    
+    <div class="article-inner">
+    
+    
+    
+        <header class="article-header">
+    
+        
+  
+    <h1 class="article-title" itemprop="name">
+      String的加法, StringBuilder, StringBuffer
+    </h1>
+  
+
+    
+    <div style="display: flex; flex-direction: row; align-items: center; position: relative">
+    <div>
+        <label data-url="http://caoyunhao.com/p/72877d/" data-id="ck7rwt8lk0021tpjc89twanau" for="share-box-ck7rwt8lk0021tpjc89twanau"
+               class="article-share-link"></label>
+    </div>
+    <input type="checkbox" id="share-box-ck7rwt8lk0021tpjc89twanau" role="button" class="check-box-switch">
+    <div class="article-share-box">
+        <!--<input class="article-share-input" value="http://caoyunhao.com/p/72877d/">-->
+        <div class="article-share-links">
+            <a href="https://twitter.com/intent/tweet?url=' + http://caoyunhao.com/p/72877d/ + '" class="article-share-twitter" target="_blank"
+               title="Twitter"></a>
+            <a href="https://www.facebook.com/sharer.php?u=' + http://caoyunhao.com/p/72877d/ + '" class="article-share-facebook"
+               target="_blank" title="Facebook"></a>
+            <a href="http://pinterest.com/pin/create/button/?url=' + http://caoyunhao.com/p/72877d/ + '" class="article-share-pinterest"
+               target="_blank" title="Pinterest"></a>
+            <a href="https://plus.google.com/share?url=' + http://caoyunhao.com/p/72877d/ + '" class="article-share-google" target="_blank"
+               title="Google+"></a>
+        </div>
+    </div>
+</div>
+</header>
+    
+        <div class="article-entry" itemprop="articleBody">
+            
+                <p>在我们编写Java代码过程中，经常有拼接字符串的需求，通常有三种方法：</p>
+<ul>
+<li>直接使用<code>&quot;+&quot;</code>操作</li>
+<li>使用<code>StringBuilder</code></li>
+<li>使用<code>StringBuffer</code></li>
+</ul>
+<a id="more"></a>
+<blockquote>
+<p>首先介绍一下<code>StringBuilder</code></p>
+</blockquote>
+<h3 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a><code>StringBuilder</code></h3><p>先看一下如何使用<code>StringBuilder</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">sb.append(<span class="string">"a"</span>);</span><br><span class="line">sb.append(<span class="string">"b"</span>);</span><br><span class="line">sb.toString(); <span class="comment">// "ab"</span></span><br></pre></td></tr></table></figure>
+<p>通过<code>append</code>操作拼接字符串，最后通过<code>toString</code>方法得到最终的字符串。</p>
+<h3 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a><code>StringBuffer</code></h3><p><code>StringBuffer</code>和<code>StringBuilder</code>的使用方法差不多。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">sb.append(<span class="string">"a"</span>);</span><br><span class="line">sb.append(<span class="string">"b"</span>);</span><br><span class="line">sb.toString(); <span class="comment">// "ab"</span></span><br></pre></td></tr></table></figure>
+<p>既然差不多，为什么还要另搞一个<code>StringBuffer</code>呢？查看源码可以看到，<code>StringBuffer</code>的操作都是有<code>synchronized</code>关键字的，也就是说是线程安全的。</p>
+<h3 id="StringBuilder-和-StringBuffer-比较"><a href="#StringBuilder-和-StringBuffer-比较" class="headerlink" title="StringBuilder 和 StringBuffer 比较"></a>StringBuilder 和 StringBuffer 比较</h3><p>所以我们可以总结，</p>
+<ul>
+<li>当为单线程时，直接使用<code>StringBuilder</code>，比<code>StringBuffer</code>要快，免去加锁操作。</li>
+<li>对于多线程，我们可以使用<code>StringBuffer</code>保证线程安全。</li>
+</ul>
+<h3 id="可以直接使用-quot-quot-吗？"><a href="#可以直接使用-quot-quot-吗？" class="headerlink" title="可以直接使用&quot;+&quot;吗？"></a>可以直接使用<code>&quot;+&quot;</code>吗？</h3><p>当然可以，不然发明它干吗～～</p>
+<p>假如，我们编写以下程序，直接相加2个字符串</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String ret = str1 + str2;</span><br></pre></td></tr></table></figure>
+<p>build后查看class文件，发现是这样的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String ret = (<span class="keyword">new</span> StringBuilder()).append(str1).append(str2).toString())</span><br></pre></td></tr></table></figure>
+<p>也就是说，如果直接采用<code>+</code>进行字符串的合并，编译器会将其转为<code>StringBuilder</code>，所以放心使用String的加法吧～</p>
+<p>只是</p>
+<p>如果你要写下面的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String ret = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">for</span> (String str: strs) &#123;</span><br><span class="line">    ret += str;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看看build后的结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String ret = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">for</span> (String str: strs) &#123;</span><br><span class="line">    ret = (<span class="keyword">new</span> StringBuilder()).append(ret).append(str).toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>显然，这将会产生n多个StringBuilder，大大增加了gc开销，这个时候，<code>StringBuilder</code>和<code>StringBuffer</code>便派上用场了，所以，知道该怎么做了吗。</p>
+
+            
+        </div>
+    </div>
+
+</article>
+</section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

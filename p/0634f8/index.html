@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-120437925-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>使用UserDefaults保存数据 | Yunhao&#39;s Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="基本方法UserDefaults可以保存简单的数据结构 使用UserDefaults.standard获取UserDefaults对象 保存数据方法 12// 保存数据func set(_ value: Any?, forKey defaultName: String) 获取数据方法123456// 获取字典UserDefaults.standard.dictionary(forKey: name">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用UserDefaults保存数据">
+<meta property="og:url" content="http://caoyunhao.com/p/0634f8/index.html">
+<meta property="og:site_name" content="Yunhao&#39;s Home">
+<meta property="og:description" content="基本方法UserDefaults可以保存简单的数据结构 使用UserDefaults.standard获取UserDefaults对象 保存数据方法 12// 保存数据func set(_ value: Any?, forKey defaultName: String) 获取数据方法123456// 获取字典UserDefaults.standard.dictionary(forKey: name">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-14T17:54:13.409Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用UserDefaults保存数据">
+<meta name="twitter:description" content="基本方法UserDefaults可以保存简单的数据结构 使用UserDefaults.standard获取UserDefaults对象 保存数据方法 12// 保存数据func set(_ value: Any?, forKey defaultName: String) 获取数据方法123456// 获取字典UserDefaults.standard.dictionary(forKey: name">
+  
+    <link rel="alternate" href="/atom.xml" title="Yunhao&#39;s Home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://s1.ax1x.com/2018/06/09/CbgQqs.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div class="no-js">
+    未开启JavaScript，可能会影响部分功能。
+    <script>
+        (function () {
+            const node = document.getElementsByClassName("no-js").item(0);
+            node.parentNode.removeChild(node)
+        })();
+    </script>
+  </div>
+  <div id="container">
+    <div id="wrap">
+
+      <div class="outer body">
+        <input type="checkbox" id="mobile-menu-input">
+<label class="mobile-wrap" for="mobile-menu-input"></label>
+<div class="mobile" for="mobile-menu-input">
+    <label class="mobile-label" for="mobile-menu-input" style="float: right">
+        <div class="mobile-label-1">
+            <div class="mobile-label-2">
+                <div class="mobile-label-3">
+
+                </div>
+            </div>
+        </div>
+    </label>
+    <div class="mobile-menu" for="mobile-menu-input">
+<!--        <a href="/">回到主页</a>-->
+        <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+    </div>
+</div>
+        
+          <div class="home-sidebar">
+            <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+          </div>
+        
+        <section id="main"><article id="post-0634f8" class="article article-type-post" itemscope
+         itemprop="blogPost">
+    
+    <div class="article-meta indent">
+    
+    <!--<a href="/p/0634f8/" class="article-date">-->
+  <!--<time datetime="2018-09-06T02:00:00.000Z" itemprop="datePublished">2018-09-06</time>-->
+<!--</a>-->
+<div class="article-date">
+  <time datetime="2018-09-06T02:00:00.000Z" itemprop="datePublished">2018-09-06</time>
+</div>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/category/technology/">技术</a>►<a class="article-category-link" href="/category/technology/Swift/">Swift</a>
+  </div>
+
+    </div>
+    
+    <div class="article-inner">
+    
+    
+    
+        <header class="article-header">
+    
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用UserDefaults保存数据
+    </h1>
+  
+
+    
+    <div style="display: flex; flex-direction: row; align-items: center; position: relative">
+    <div>
+        <label data-url="http://caoyunhao.com/p/0634f8/" data-id="ck7rwt8km0006tpjc6h6brlt5" for="share-box-ck7rwt8km0006tpjc6h6brlt5"
+               class="article-share-link"></label>
+    </div>
+    <input type="checkbox" id="share-box-ck7rwt8km0006tpjc6h6brlt5" role="button" class="check-box-switch">
+    <div class="article-share-box">
+        <!--<input class="article-share-input" value="http://caoyunhao.com/p/0634f8/">-->
+        <div class="article-share-links">
+            <a href="https://twitter.com/intent/tweet?url=' + http://caoyunhao.com/p/0634f8/ + '" class="article-share-twitter" target="_blank"
+               title="Twitter"></a>
+            <a href="https://www.facebook.com/sharer.php?u=' + http://caoyunhao.com/p/0634f8/ + '" class="article-share-facebook"
+               target="_blank" title="Facebook"></a>
+            <a href="http://pinterest.com/pin/create/button/?url=' + http://caoyunhao.com/p/0634f8/ + '" class="article-share-pinterest"
+               target="_blank" title="Pinterest"></a>
+            <a href="https://plus.google.com/share?url=' + http://caoyunhao.com/p/0634f8/ + '" class="article-share-google" target="_blank"
+               title="Google+"></a>
+        </div>
+    </div>
+</div>
+</header>
+    
+        <div class="article-entry" itemprop="articleBody">
+            
+                <h3 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h3><p><code>UserDefaults</code>可以保存简单的数据结构</p>
+<p>使用<code>UserDefaults.standard</code>获取<code>UserDefaults</code>对象</p>
+<p>保存数据方法</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 保存数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">set</span><span class="params">(<span class="number">_</span> value: <span class="keyword">Any</span>?, forKey defaultName: String)</span></span></span><br></pre></td></tr></table></figure>
+<p>获取数据方法<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取字典</span></span><br><span class="line"><span class="type">UserDefaults</span>.standard.dictionary(forKey: name)</span><br><span class="line"><span class="comment">// 获取数组</span></span><br><span class="line"><span class="type">UserDefaults</span>.standard.array(forKey: arrayName)</span><br><span class="line"><span class="comment">// 获取对象</span></span><br><span class="line"><span class="type">UserDefaults</span>.standard.object(forKey: key)</span><br></pre></td></tr></table></figure></p>
+<p>删除数据</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除某个键</span></span><br><span class="line"><span class="selector-tag">UserDefaults</span><span class="selector-class">.standard</span><span class="selector-class">.removeObject</span>(<span class="attribute">forKey</span>: key)</span><br><span class="line"><span class="comment">// 删除所有</span></span><br><span class="line"><span class="selector-tag">UserDefaults</span><span class="selector-class">.standard</span><span class="selector-class">.removePersistentDomain</span>(<span class="attribute">forName</span>: Bundle.main.bundleIdentifier!)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="保存自定义类"><a href="#保存自定义类" class="headerlink" title="保存自定义类"></a>保存自定义类</h3><p><code>UserDefaults</code>可以对内置基本类型有很好的支持，但我们有时需要保存自定义的数据结构。自定义的类型不能直接保存至UserDefaults，我们需要将其转化为<code>Data</code>。</p>
+<p>这里，我们使用<code>NSKeyedArchiver</code>和<code>NSKeyedUnarchiver</code>对数据进行转化。因此，自定义的类需要满足以下条件：</p>
+<ul>
+<li>满足<code>NSCoding</code>协议</li>
+</ul>
+<p>作为一个例子，我们保存以下这个自定义的类至<code>UserDefaults</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Storage</span>: <span class="title">NSObject</span>, <span class="title">NSCoding</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> id: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(id: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.id = id</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">encode</span><span class="params">(with aCoder: NSCoder)</span></span> &#123;</span><br><span class="line">        aCoder.encode(id, forKey: <span class="string">"id"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>?(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">        id = aDecoder.decodeObject(forKey: <span class="string">"id"</span>) <span class="keyword">as</span>! <span class="type">String</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>保存和读取时:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 保存</span></span><br><span class="line"><span class="keyword">return</span> <span class="type">UserDefaults</span>.standard.<span class="keyword">set</span>(<span class="type">NSKeyedArchiver</span>.archivedData(withRootObject: storageObject), forKey: key)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取</span></span><br><span class="line"><span class="keyword">let</span> data = <span class="type">UserDefaults</span>.standard.object(forKey: key)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> data = data &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">NSKeyedUnarchiver</span>.unarchiveObject(with: data <span class="keyword">as</span>! <span class="type">Data</span>) <span class="keyword">as</span>! <span class="type">Storage</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="进阶需求"><a href="#进阶需求" class="headerlink" title="进阶需求"></a>进阶需求</h3><ol>
+<li>可以对数组元素进行增删</li>
+<li>可以对字典Key-Value进行增删</li>
+</ol>
+<p>思路：类似于指针</p>
+<ol>
+<li>在数组和字典的值保存为String</li>
+<li>这个String作为Key，使用<code>UserDefaults.standard.object</code>获取具体的值，这样对数据的修改也不会对数组和字典进行修改。</li>
+</ol>
+
+            
+        </div>
+    </div>
+
+</article>
+</section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

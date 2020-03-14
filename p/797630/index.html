@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-120437925-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>Linux文件权限 | Yunhao&#39;s Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Linux 文件权限查看权限使用带-l选项的ls命令时，将以长格式显示文件或目录的详细信息，其中包括了该文件的权限和归属等参数。 如-rw-r--r—.由四部分组成，各自的含义如下：  第1个字符：表示该文件的类型，可以是 d（目录） b（块设备） c（字符设备文件） -（普通文件） l（链接文件)   第2~4个字符：表示该文件的属主用户（user）对该文件的访问权限。 第5~7个字符：表示该文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux文件权限">
+<meta property="og:url" content="http://caoyunhao.com/p/797630/index.html">
+<meta property="og:site_name" content="Yunhao&#39;s Home">
+<meta property="og:description" content="Linux 文件权限查看权限使用带-l选项的ls命令时，将以长格式显示文件或目录的详细信息，其中包括了该文件的权限和归属等参数。 如-rw-r--r—.由四部分组成，各自的含义如下：  第1个字符：表示该文件的类型，可以是 d（目录） b（块设备） c（字符设备文件） -（普通文件） l（链接文件)   第2~4个字符：表示该文件的属主用户（user）对该文件的访问权限。 第5~7个字符：表示该文">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-14T17:54:13.413Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux文件权限">
+<meta name="twitter:description" content="Linux 文件权限查看权限使用带-l选项的ls命令时，将以长格式显示文件或目录的详细信息，其中包括了该文件的权限和归属等参数。 如-rw-r--r—.由四部分组成，各自的含义如下：  第1个字符：表示该文件的类型，可以是 d（目录） b（块设备） c（字符设备文件） -（普通文件） l（链接文件)   第2~4个字符：表示该文件的属主用户（user）对该文件的访问权限。 第5~7个字符：表示该文">
+  
+    <link rel="alternate" href="/atom.xml" title="Yunhao&#39;s Home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://s1.ax1x.com/2018/06/09/CbgQqs.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div class="no-js">
+    未开启JavaScript，可能会影响部分功能。
+    <script>
+        (function () {
+            const node = document.getElementsByClassName("no-js").item(0);
+            node.parentNode.removeChild(node)
+        })();
+    </script>
+  </div>
+  <div id="container">
+    <div id="wrap">
+
+      <div class="outer body">
+        <input type="checkbox" id="mobile-menu-input">
+<label class="mobile-wrap" for="mobile-menu-input"></label>
+<div class="mobile" for="mobile-menu-input">
+    <label class="mobile-label" for="mobile-menu-input" style="float: right">
+        <div class="mobile-label-1">
+            <div class="mobile-label-2">
+                <div class="mobile-label-3">
+
+                </div>
+            </div>
+        </div>
+    </label>
+    <div class="mobile-menu" for="mobile-menu-input">
+<!--        <a href="/">回到主页</a>-->
+        <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+    </div>
+</div>
+        
+          <div class="home-sidebar">
+            <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+          </div>
+        
+        <section id="main"><article id="post-797630" class="article article-type-post" itemscope
+         itemprop="blogPost">
+    
+    <div class="article-meta indent">
+    
+    <!--<a href="/p/797630/" class="article-date">-->
+  <!--<time datetime="2019-04-11T16:30:00.000Z" itemprop="datePublished">2019-04-12</time>-->
+<!--</a>-->
+<div class="article-date">
+  <time datetime="2019-04-11T16:30:00.000Z" itemprop="datePublished">2019-04-12</time>
+</div>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/category/technology/">技术</a>►<a class="article-category-link" href="/category/technology/linux/">Linux</a>
+  </div>
+
+    </div>
+    
+    <div class="article-inner">
+    
+    
+    
+        <header class="article-header">
+    
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux文件权限
+    </h1>
+  
+
+    
+    <div style="display: flex; flex-direction: row; align-items: center; position: relative">
+    <div>
+        <label data-url="http://caoyunhao.com/p/797630/" data-id="ck7rwt8lj0020tpjc0unz4j6u" for="share-box-ck7rwt8lj0020tpjc0unz4j6u"
+               class="article-share-link"></label>
+    </div>
+    <input type="checkbox" id="share-box-ck7rwt8lj0020tpjc0unz4j6u" role="button" class="check-box-switch">
+    <div class="article-share-box">
+        <!--<input class="article-share-input" value="http://caoyunhao.com/p/797630/">-->
+        <div class="article-share-links">
+            <a href="https://twitter.com/intent/tweet?url=' + http://caoyunhao.com/p/797630/ + '" class="article-share-twitter" target="_blank"
+               title="Twitter"></a>
+            <a href="https://www.facebook.com/sharer.php?u=' + http://caoyunhao.com/p/797630/ + '" class="article-share-facebook"
+               target="_blank" title="Facebook"></a>
+            <a href="http://pinterest.com/pin/create/button/?url=' + http://caoyunhao.com/p/797630/ + '" class="article-share-pinterest"
+               target="_blank" title="Pinterest"></a>
+            <a href="https://plus.google.com/share?url=' + http://caoyunhao.com/p/797630/ + '" class="article-share-google" target="_blank"
+               title="Google+"></a>
+        </div>
+    </div>
+</div>
+</header>
+    
+        <div class="article-entry" itemprop="articleBody">
+            
+                <h4 id="Linux-文件权限"><a href="#Linux-文件权限" class="headerlink" title="Linux 文件权限"></a>Linux 文件权限</h4><h5 id="查看权限"><a href="#查看权限" class="headerlink" title="查看权限"></a>查看权限</h5><p>使用带<code>-l</code>选项的<code>ls</code>命令时，将以长格式显示文件或目录的详细信息，其中包括了该文件的权限和归属等参数。</p>
+<p>如<code>-rw-r--r—.</code>由四部分组成，各自的含义如下：</p>
+<ul>
+<li>第1个字符：表示该文件的类型，可以是<ul>
+<li><code>d</code>（目录）</li>
+<li><code>b</code>（块设备）</li>
+<li><code>c</code>（字符设备文件）</li>
+<li><code>-</code>（普通文件）</li>
+<li><code>l</code>（链接文件)</li>
+</ul>
+</li>
+<li>第2~4个字符：表示该文件的属主用户（user）对该文件的访问权限。</li>
+<li>第5~7个字符：表示该文件的属组内各成员用户对该文件的访问权限。</li>
+<li>第8~10个字符：表示其他任何用户（Other）对该文件的访问权限。</li>
+<li>第11个字符：这里的“.”与SELinux有关，目前不必关注。</li>
+</ul>
+<a id="more"></a>
+<h5 id="设置权限"><a href="#设置权限" class="headerlink" title="设置权限"></a>设置权限</h5><p>通过<code>chmod</code>命令设置文件或目录的权限，可以采用两种形式的权限表示方法：字符形式和数字形式。<strong>r</strong>、<strong>w</strong>、<strong>x</strong>权限字符可分别表示为八进制数字4、2、1，表示一个权限组合时需要将数字进行累加。</p>
+<table>
+<thead>
+<tr>
+<th>文件所有者</th>
+<th>文件所属组</th>
+<th>其他任何人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>r</strong>、<strong>w</strong>、<strong>x</strong></td>
+<td><strong>r</strong>、<strong>w</strong>、<strong>x</strong></td>
+<td><strong>r</strong>、<strong>w</strong>、<strong>x</strong></td>
+</tr>
+<tr>
+<td><strong>4</strong>、<strong>2</strong>、<strong>1</strong></td>
+<td><strong>4</strong>、<strong>2</strong>、<strong>1</strong></td>
+<td><strong>4</strong>、<strong>2</strong>、<strong>1</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>r</code>读、<code>w</code>写、<code>x</code>运行</li>
+</ul>
+<p>例如使用</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 file.txt <span class="comment"># 设置所有人均有所有权限</span></span><br><span class="line"><span class="comment"># 或者使用</span></span><br><span class="line">chmod [ugoa] [+-=] [rwx] file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>u</code>用户、<code>g</code>所属组、<code>o</code>其他人、<code>a</code>所有人</li>
+<li><code>+</code>增加、<code>-</code>去除、<code>=</code>设置权限</li>
+</ul>
+
+            
+        </div>
+    </div>
+
+</article>
+</section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

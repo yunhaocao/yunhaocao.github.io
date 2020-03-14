@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-120437925-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>C++基础 | Yunhao&#39;s Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="C++ 基础std::string::c_str()c_str()函数返回一个指向正规C字符串的指针, 内容与本string串相同，这是为了与c语言兼容，在c语言中没有string类型，故必须通过string类对象的成员函数c_str()把string 对象转换成c中的字符串样式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++基础">
+<meta property="og:url" content="http://caoyunhao.com/p/707bfb/index.html">
+<meta property="og:site_name" content="Yunhao&#39;s Home">
+<meta property="og:description" content="C++ 基础std::string::c_str()c_str()函数返回一个指向正规C字符串的指针, 内容与本string串相同，这是为了与c语言兼容，在c语言中没有string类型，故必须通过string类对象的成员函数c_str()把string 对象转换成c中的字符串样式。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-14T17:54:13.356Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++基础">
+<meta name="twitter:description" content="C++ 基础std::string::c_str()c_str()函数返回一个指向正规C字符串的指针, 内容与本string串相同，这是为了与c语言兼容，在c语言中没有string类型，故必须通过string类对象的成员函数c_str()把string 对象转换成c中的字符串样式。">
+  
+    <link rel="alternate" href="/atom.xml" title="Yunhao&#39;s Home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://s1.ax1x.com/2018/06/09/CbgQqs.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div class="no-js">
+    未开启JavaScript，可能会影响部分功能。
+    <script>
+        (function () {
+            const node = document.getElementsByClassName("no-js").item(0);
+            node.parentNode.removeChild(node)
+        })();
+    </script>
+  </div>
+  <div id="container">
+    <div id="wrap">
+
+      <div class="outer body">
+        <input type="checkbox" id="mobile-menu-input">
+<label class="mobile-wrap" for="mobile-menu-input"></label>
+<div class="mobile" for="mobile-menu-input">
+    <label class="mobile-label" for="mobile-menu-input" style="float: right">
+        <div class="mobile-label-1">
+            <div class="mobile-label-2">
+                <div class="mobile-label-3">
+
+                </div>
+            </div>
+        </div>
+    </label>
+    <div class="mobile-menu" for="mobile-menu-input">
+<!--        <a href="/">回到主页</a>-->
+        <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+    </div>
+</div>
+        
+          <div class="home-sidebar">
+            <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+          </div>
+        
+        <section id="main"><article id="post-707bfb" class="article article-type-post" itemscope
+         itemprop="blogPost">
+    
+    <div class="article-meta indent">
+    
+    <!--<a href="/p/707bfb/" class="article-date">-->
+  <!--<time datetime="2019-03-26T03:00:00.000Z" itemprop="datePublished">2019-03-26</time>-->
+<!--</a>-->
+<div class="article-date">
+  <time datetime="2019-03-26T03:00:00.000Z" itemprop="datePublished">2019-03-26</time>
+</div>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/category/technology/">技术</a>►<a class="article-category-link" href="/category/technology/cpp/">C++</a>
+  </div>
+
+    </div>
+    
+    <div class="article-inner">
+    
+    
+    
+        <header class="article-header">
+    
+        
+  
+    <h1 class="article-title" itemprop="name">
+      C++基础
+    </h1>
+  
+
+    
+    <div style="display: flex; flex-direction: row; align-items: center; position: relative">
+    <div>
+        <label data-url="http://caoyunhao.com/p/707bfb/" data-id="ck7rwt8lh001utpjcomacepk2" for="share-box-ck7rwt8lh001utpjcomacepk2"
+               class="article-share-link"></label>
+    </div>
+    <input type="checkbox" id="share-box-ck7rwt8lh001utpjcomacepk2" role="button" class="check-box-switch">
+    <div class="article-share-box">
+        <!--<input class="article-share-input" value="http://caoyunhao.com/p/707bfb/">-->
+        <div class="article-share-links">
+            <a href="https://twitter.com/intent/tweet?url=' + http://caoyunhao.com/p/707bfb/ + '" class="article-share-twitter" target="_blank"
+               title="Twitter"></a>
+            <a href="https://www.facebook.com/sharer.php?u=' + http://caoyunhao.com/p/707bfb/ + '" class="article-share-facebook"
+               target="_blank" title="Facebook"></a>
+            <a href="http://pinterest.com/pin/create/button/?url=' + http://caoyunhao.com/p/707bfb/ + '" class="article-share-pinterest"
+               target="_blank" title="Pinterest"></a>
+            <a href="https://plus.google.com/share?url=' + http://caoyunhao.com/p/707bfb/ + '" class="article-share-google" target="_blank"
+               title="Google+"></a>
+        </div>
+    </div>
+</div>
+</header>
+    
+        <div class="article-entry" itemprop="articleBody">
+            
+                <h4 id="C-基础"><a href="#C-基础" class="headerlink" title="C++ 基础"></a>C++ 基础</h4><h5 id="std-string-c-str"><a href="#std-string-c-str" class="headerlink" title="std::string::c_str()"></a>std::string::c_str()</h5><p><code>c_str()</code>函数返回一个指向正规C字符串的指针, 内容与本string串相同，这是为了与c语言兼容，在c语言中没有string类型，故必须通过string类对象的成员函数c_str()把string 对象转换成c中的字符串样式。</p>
+<a id="more"></a>
+<h5 id="dirent-d-type"><a href="#dirent-d-type" class="headerlink" title="dirent.d_type"></a>dirent.d_type</h5><p>unsigned char d_type</p>
+<p>This is the type of the file, possibly unknown. The following constants are defined for its value:</p>
+<ul>
+<li><code>DT_UNKNOWN</code> The type is unknown. Only some filesystems have full support to return the type of the file, others might always return this value. 类型未知。少数文件系统会出现此函数不支持的文件类型，另一些则总是返回这个值。译者注：总之这个值是为了应对不兼容的文件系统而设置的。</li>
+<li><code>DT_REG</code> A regular file. 常规文件</li>
+<li><code>DT_DIR</code> A directory. 目录</li>
+<li><code>DT_FIFO</code> A named pipe, or FIFO. See FIFO Special Files. 一个命名管道，或FIFO。</li>
+<li><code>DT_SOCK</code> A local-domain socket. 套接字</li>
+<li><code>DT_CHR</code> A character device. 字符设备</li>
+<li><code>DT_BLK</code> A block device. 块设备</li>
+<li><code>DT_LNK</code>  A symbolic link.  符号链接</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DIR* dirp = opendir(path.c_str());</span><br><span class="line">dirent* dp;</span><br><span class="line"><span class="keyword">while</span> ((dp = readdir(dirp)) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> subpath = dp-&gt;d_name; <span class="comment">// 文件名</span></span><br><span class="line">    LOG(INFO) &lt;&lt; <span class="string">"path "</span> &lt;&lt; path &lt;&lt; <span class="string">" subpath: "</span> &lt;&lt; subpath;</span><br><span class="line">    <span class="keyword">if</span> ((dp-&gt;d_type == DT_REG)) &#123; <span class="comment">// 文件类型</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">(<span class="keyword">void</span>)closedir(dirp);</span><br></pre></td></tr></table></figure>
+
+            
+        </div>
+    </div>
+
+</article>
+</section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

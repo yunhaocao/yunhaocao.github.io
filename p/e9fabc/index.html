@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-120437925-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>Vim使用指南 | Yunhao&#39;s Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Vim 使用指南编辑操作 插入模式：i，可以增删改字符，比较基础的操作 复制：yy 向下复制n行：数字 + yy :1,4 co 6：复制1~4行复制到第6行下面   粘贴：p 删除 删除光标所在行：dd 删除光标之前该行所有字符：d0 删除光标之后该行所有字符：d$ 删除光标之前n个字符：数字 + X 删除光标之后n个字符：数字 + x 删除光标向下n行：数字 + dd 删除光标之前所有字符：d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vim使用指南">
+<meta property="og:url" content="http://caoyunhao.com/p/e9fabc/index.html">
+<meta property="og:site_name" content="Yunhao&#39;s Home">
+<meta property="og:description" content="Vim 使用指南编辑操作 插入模式：i，可以增删改字符，比较基础的操作 复制：yy 向下复制n行：数字 + yy :1,4 co 6：复制1~4行复制到第6行下面   粘贴：p 删除 删除光标所在行：dd 删除光标之前该行所有字符：d0 删除光标之后该行所有字符：d$ 删除光标之前n个字符：数字 + X 删除光标之后n个字符：数字 + x 删除光标向下n行：数字 + dd 删除光标之前所有字符：d">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-14T17:54:13.414Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vim使用指南">
+<meta name="twitter:description" content="Vim 使用指南编辑操作 插入模式：i，可以增删改字符，比较基础的操作 复制：yy 向下复制n行：数字 + yy :1,4 co 6：复制1~4行复制到第6行下面   粘贴：p 删除 删除光标所在行：dd 删除光标之前该行所有字符：d0 删除光标之后该行所有字符：d$ 删除光标之前n个字符：数字 + X 删除光标之后n个字符：数字 + x 删除光标向下n行：数字 + dd 删除光标之前所有字符：d">
+  
+    <link rel="alternate" href="/atom.xml" title="Yunhao&#39;s Home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://s1.ax1x.com/2018/06/09/CbgQqs.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div class="no-js">
+    未开启JavaScript，可能会影响部分功能。
+    <script>
+        (function () {
+            const node = document.getElementsByClassName("no-js").item(0);
+            node.parentNode.removeChild(node)
+        })();
+    </script>
+  </div>
+  <div id="container">
+    <div id="wrap">
+
+      <div class="outer body">
+        <input type="checkbox" id="mobile-menu-input">
+<label class="mobile-wrap" for="mobile-menu-input"></label>
+<div class="mobile" for="mobile-menu-input">
+    <label class="mobile-label" for="mobile-menu-input" style="float: right">
+        <div class="mobile-label-1">
+            <div class="mobile-label-2">
+                <div class="mobile-label-3">
+
+                </div>
+            </div>
+        </div>
+    </label>
+    <div class="mobile-menu" for="mobile-menu-input">
+<!--        <a href="/">回到主页</a>-->
+        <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+    </div>
+</div>
+        
+          <div class="home-sidebar">
+            <aside id="sidebar">
+    <div>
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">概况</h3>
+    <div class="widget">
+        <a href="/">主页</a>
+    </div>
+</div>
+  
+    
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/ad/">广告</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/">技术</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/cpp/">C++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Git/">Git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/">Java</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/8/">8</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Gradle/">Gradle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/jvm/">JVM</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/spring/">Spring</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/java/api/">api</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/linux/">Linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/python/">Python</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/Swift/">Swift</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/machine-learning/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/webpage-design/">网页设计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/category/technology/design-pattern/">设计模式</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/category/news/">新闻</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/category/日记/">日记</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/">生活</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/category/life/nous/">常识</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/category/life/attitude/">态度</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    </div>
+</aside>
+          </div>
+        
+        <section id="main"><article id="post-e9fabc" class="article article-type-post" itemscope
+         itemprop="blogPost">
+    
+    <div class="article-meta indent">
+    
+    <!--<a href="/p/e9fabc/" class="article-date">-->
+  <!--<time datetime="2019-05-15T12:00:00.000Z" itemprop="datePublished">2019-05-15</time>-->
+<!--</a>-->
+<div class="article-date">
+  <time datetime="2019-05-15T12:00:00.000Z" itemprop="datePublished">2019-05-15</time>
+</div>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/category/technology/">技术</a>►<a class="article-category-link" href="/category/technology/linux/">Linux</a>
+  </div>
+
+    </div>
+    
+    <div class="article-inner">
+    
+    
+    
+        <header class="article-header">
+    
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vim使用指南
+    </h1>
+  
+
+    
+    <div style="display: flex; flex-direction: row; align-items: center; position: relative">
+    <div>
+        <label data-url="http://caoyunhao.com/p/e9fabc/" data-id="ck7rwt8mj0046tpjcsftojqfl" for="share-box-ck7rwt8mj0046tpjcsftojqfl"
+               class="article-share-link"></label>
+    </div>
+    <input type="checkbox" id="share-box-ck7rwt8mj0046tpjcsftojqfl" role="button" class="check-box-switch">
+    <div class="article-share-box">
+        <!--<input class="article-share-input" value="http://caoyunhao.com/p/e9fabc/">-->
+        <div class="article-share-links">
+            <a href="https://twitter.com/intent/tweet?url=' + http://caoyunhao.com/p/e9fabc/ + '" class="article-share-twitter" target="_blank"
+               title="Twitter"></a>
+            <a href="https://www.facebook.com/sharer.php?u=' + http://caoyunhao.com/p/e9fabc/ + '" class="article-share-facebook"
+               target="_blank" title="Facebook"></a>
+            <a href="http://pinterest.com/pin/create/button/?url=' + http://caoyunhao.com/p/e9fabc/ + '" class="article-share-pinterest"
+               target="_blank" title="Pinterest"></a>
+            <a href="https://plus.google.com/share?url=' + http://caoyunhao.com/p/e9fabc/ + '" class="article-share-google" target="_blank"
+               title="Google+"></a>
+        </div>
+    </div>
+</div>
+</header>
+    
+        <div class="article-entry" itemprop="articleBody">
+            
+                <h4 id="Vim-使用指南"><a href="#Vim-使用指南" class="headerlink" title="Vim 使用指南"></a>Vim 使用指南</h4><h5 id="编辑操作"><a href="#编辑操作" class="headerlink" title="编辑操作"></a>编辑操作</h5><ul>
+<li>插入模式：<code>i</code>，可以增删改字符，比较基础的操作</li>
+<li>复制：<code>yy</code><ul>
+<li>向下复制n行：<code>数字 + yy</code></li>
+<li><code>:1,4 co 6</code>：复制1~4行复制到第6行下面</li>
+</ul>
+</li>
+<li>粘贴：<code>p</code></li>
+<li>删除<ul>
+<li>删除光标所在行：<code>dd</code></li>
+<li>删除光标之前该行所有字符：<code>d0</code></li>
+<li>删除光标之后该行所有字符：<code>d$</code></li>
+<li>删除光标之前n个字符：<code>数字 + X</code></li>
+<li>删除光标之后n个字符：<code>数字 + x</code></li>
+<li>删除光标向下n行：<code>数字 + dd</code></li>
+<li>删除光标之前所有字符：<code>d1G</code></li>
+<li>删除光标之后所有字符：<code>dG</code></li>
+</ul>
+</li>
+<li>撤销<code>u</code>与重做<code>ctrl(control) + r</code><ul>
+<li>撤销n步：<code>数字 + u</code></li>
+<li>重做n步：<code>数字 + ctrl(control) + r</code></li>
+</ul>
+</li>
+<li>上下左右移动n个字符：<code>数字 + 方向键</code>，或者使用<code>H J K L</code>移动</li>
+<li>移动整行<ul>
+<li>向下移动：<code>:m+</code></li>
+<li>向上移动：<code>:m-2</code></li>
+<li>建议配置快捷键：<code>nmap &lt;S-j&gt; :m+&lt;cr&gt;</code>，直接在所在行按<code>shift + j</code></li>
+</ul>
+</li>
+<li>查找：<code>/</code>，之后使用<code>n</code>查找下一个，<code>shift + n</code>查找上一个<ul>
+<li><code>\c</code>：大小写不敏感，<code>\C</code>：大小写敏感（默认）。<code>/word\C</code></li>
+</ul>
+</li>
+<li>查找光标所在单词：<code>g*</code></li>
+<li>替换：<code>:{作用范围}s/{目标}/{替换}/{替换标志}</code><ul>
+<li>当前行：<code>:s/foo/bar/g</code></li>
+<li>全局：<code>:%s/foo/bar/g</code></li>
+<li>行号范围：<code>:5,12s/foo/bar/g</code></li>
+<li>当前行开始几行：<code>:.,+2s/foo/bar/g</code></li>
+<li>替换标志：<ul>
+<li><code>g</code>：全局（global）替换</li>
+<li><code>i</code>：忽略大小写</li>
+<li><code>c</code>：每次确认</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>左右缩进：左<code>&lt;</code>、右<code>&gt;</code></li>
+<li><strong>VISUAL </strong>模式：<code>v</code>、<code>V</code>，可选择多字符或多行</li>
+</ul>
+<h5 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h5><ul>
+<li>保存：<code>/w</code></li>
+<li>退出：<code>/q</code>，保存并退出 <code>/wq</code></li>
+<li>强制退出（不保存）：<code>/q!</code></li>
+</ul>
+<h5 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h5><ul>
+<li>行号：<code>set number</code>，<code>set nonumber</code></li>
+</ul>
+
+            
+        </div>
+    </div>
+
+</article>
+</section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

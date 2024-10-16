@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Yunhao&#39;s Site</title>
+  
+  
+  <link href="https://caoyunhao.com/atom.xml" rel="self"/>
+  
+  <link href="https://caoyunhao.com/"/>
+  <updated>2024-07-05T04:00:00.000Z</updated>
+  <id>https://caoyunhao.com/</id>
+  
+  <author>
+    <name>Yunhao</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Feign</title>
+    <link href="https://caoyunhao.com/p/037d5dce/"/>
+    <id>https://caoyunhao.com/p/037d5dce/</id>
+    <published>2024-07-05T04:00:00.000Z</published>
+    <updated>2024-07-05T04:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="Java" scheme="https://caoyunhao.com/category/technology/java/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>不建议抽象类用Abstract开头命名</title>
+    <link href="https://caoyunhao.com/p/8d971e49/"/>
+    <id>https://caoyunhao.com/p/8d971e49/</id>
+    <published>2024-07-04T08:00:00.000Z</published>
+    <updated>2024-07-04T08:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="说说" scheme="https://caoyunhao.com/category/technology/%E8%AF%B4%E8%AF%B4/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL之死锁处理</title>
+    <link href="https://caoyunhao.com/p/00739f59/"/>
+    <id>https://caoyunhao.com/p/00739f59/</id>
+    <published>2024-07-02T07:00:00.000Z</published>
+    <updated>2024-07-02T07:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="数据库" scheme="https://caoyunhao.com/category/technology/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+    <category term="MySQL" scheme="https://caoyunhao.com/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java之Socket的ConnectTimeout和ReadTimeout</title>
+    <link href="https://caoyunhao.com/p/9914f84a/"/>
+    <id>https://caoyunhao.com/p/9914f84a/</id>
+    <published>2024-06-01T08:00:00.000Z</published>
+    <updated>2024-06-01T08:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="Java" scheme="https://caoyunhao.com/category/technology/java/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>使用vavr</title>
+    <link href="https://caoyunhao.com/p/e717f89a/"/>
+    <id>https://caoyunhao.com/p/e717f89a/</id>
+    <published>2024-05-31T12:00:00.000Z</published>
+    <updated>2024-05-31T12:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="Java" scheme="https://caoyunhao.com/category/technology/java/"/>
+    
+    
+  </entry>
+  
+</feed>

@@ -1,0 +1,1 @@
+(function(){const e=document.getElementsByClassName("no-js").item(0);e.parentNode.removeChild(e)})();

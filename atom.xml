@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Yunhao&#39;s Site</title>
+  
+  
+  <link href="https://caoyunhao.com/atom.xml" rel="self"/>
+  
+  <link href="https://caoyunhao.com/"/>
+  <updated>2024-12-18T10:00:00.000Z</updated>
+  <id>https://caoyunhao.com/</id>
+  
+  <author>
+    <name>Yunhao</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spring Cloud之Feign请求空对象时报错</title>
+    <link href="https://caoyunhao.com/p/815ad9b5/"/>
+    <id>https://caoyunhao.com/p/815ad9b5/</id>
+    <published>2024-12-18T10:00:00.000Z</published>
+    <updated>2024-12-18T10:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="Java" scheme="https://caoyunhao.com/category/technology/java/"/>
+    
+    
+    <category term="Feign" scheme="https://caoyunhao.com/tags/Feign/"/>
+    
+    <category term="问题排查" scheme="https://caoyunhao.com/tags/%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java：跟着EnumSet学位操作</title>
+    <link href="https://caoyunhao.com/p/665eb48f/"/>
+    <id>https://caoyunhao.com/p/665eb48f/</id>
+    <published>2024-11-28T12:00:00.000Z</published>
+    <updated>2024-11-28T12:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="Java" scheme="https://caoyunhao.com/category/technology/java/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Dijkstra：单源最短路径算法</title>
+    <link href="https://caoyunhao.com/p/754007d2/"/>
+    <id>https://caoyunhao.com/p/754007d2/</id>
+    <published>2024-11-25T13:00:00.000Z</published>
+    <updated>2024-11-25T13:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="算法" scheme="https://caoyunhao.com/category/algorithm/"/>
+    
+    
+    <category term="面试" scheme="https://caoyunhao.com/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Go数据结构：heap</title>
+    <link href="https://caoyunhao.com/p/ecb98d20/"/>
+    <id>https://caoyunhao.com/p/ecb98d20/</id>
+    <published>2024-11-24T04:00:00.000Z</published>
+    <updated>2024-11-24T04:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="Go" scheme="https://caoyunhao.com/category/technology/Go/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Go生成随机数</title>
+    <link href="https://caoyunhao.com/p/ba2da4fb/"/>
+    <id>https://caoyunhao.com/p/ba2da4fb/</id>
+    <published>2024-11-20T13:00:00.000Z</published>
+    <updated>2024-11-20T13:00:00.000Z</updated>
+    
+    
+      
+      
+    <summary type="html"></summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://caoyunhao.com/category/technology/"/>
+    
+    <category term="Go" scheme="https://caoyunhao.com/category/technology/Go/"/>
+    
+    
+  </entry>
+  
+</feed>

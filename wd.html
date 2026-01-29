@@ -1,0 +1,2445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>迷你问道</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --second-color: #888;
+            --accent-color: #4caf50;
+            --danger-color: #f44336;
+            --highlight-color: #ffeb3b;
+            --border-color: #333;
+            --panel-bg: #2d2d2d;
+            --npc-color: #9c27b0;
+            --item-heal-color: #43a047;
+            --item-eq-color: #43a047;
+            --quality-blue-color: #7f7fff;
+            --quality-gold-color: #ffff00;
+            --quality-pink-color: #ff00ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 95vh;
+            display: flex;
+            gap: 20px;
+            background-color: var(--panel-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        #game-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow: hidden;
+            min-width: 0;
+            position: relative;
+        }
+
+        #log-container {
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        header {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            background-color: #222;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-label {
+            color: var(--second-color);
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--highlight-color);
+        }
+
+
+        .stat-item.highlight {
+            animation: statPulse 0.5s ease;
+        }
+
+        @keyframes statPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        #log-section {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            animation: fadeIn 0.3s ease;
+        }
+
+        .log-entry.player-action {
+            color: #81d4fa;
+        }
+
+        .log-entry.enemy-action {
+            color: #ef9a9a;
+        }
+
+        .log-entry.system {
+            color: white;
+        }
+
+        .log-entry.critical {
+            color: var(--highlight-color);
+        }
+
+        .log-entry.death {
+            color: var(--danger-color);
+        }
+
+        .log-entry.legendary {
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        button {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button.primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #000;
+        }
+
+        button.danger {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #333;
+            margin-top: 8px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+
+            transition: width 0.3s ease;
+        }
+
+        .hp-fill {
+            background: linear-gradient(90deg, #f44336, #e53935);
+        }
+
+        .exp-fill {
+            background: linear-gradient(90deg, #ffeb3b, #ffc107);
+        }
+
+        /* 模态框通用样式 */
+        .game-over-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .game-over-modal-content {
+            background: var(--panel-bg);
+            padding: 30px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .game-over-modal-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        /* 战斗模态框 */
+        #battle-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .battle-modal-content {
+            background: var(--panel-bg);
+            padding: 15px;
+            /* border: 3px solid var(--danger-color); */
+            border-radius: 12px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .battle-compare-section {
+            display: flex;
+            gap: 15px;
+        }
+
+        .battle-side {
+            flex: 1;
+            background-color: #222;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #444;
+        }
+
+        .battle-sid e.enemy-side {
+            border-color: var(--danger-color);
+        }
+
+        .battle-side-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .battle-side.player-side .battle-side-title {
+            color: var(--accent-color);
+        }
+
+        .battle-side.enemy-side .battle-side-title {
+            color: var(--danger-color);
+        }
+
+        .battle-side.enemy-side .battle-side-title.gold-enemy {
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+        }
+
+        .battle-stat-row {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 6px;
+        }
+
+
+        .battle-stat-label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .battle-stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .battle-hp-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+            border: 1px solid #444;
+        }
+
+        .battle-hp-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .battle-hp-fill.player {
+            background: linear-gradient(90deg, #4caf50, #43a047);
+        }
+
+        .battle-hp-fill.enemy {
+            background: linear-gradient(90deg, #f44336, #e53935);
+        }
+
+        .battle-actions {
+            margin-top: 20px;
+        }
+
+        .battle-action-btn {
+            border-radius: 8px;
+        }
+
+        .battle-action-btn.attack {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #000;
+        }
+
+        .battle-action-btn.flee {
+            background-color: #333;
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .battle-status {
+            margin: 15px;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--danger-color);
+        }
+
+        /* 地图系统样式 */
+        #map-section,
+        #npc-section {
+            background-color: #222;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        #map-title,
+        #npc-title {
+            color: var(--highlight-color);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #npc-title {
+            color: var(--npc-color);
+        }
+
+        #map-buttons,
+        #npc-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .map-button {
+            background-color: #333;
+            color: #aaa;
+            border: 1px solid #555;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .map-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+
+        .map-button.unlocked {
+            background-color: rgba(76, 175, 80, 0.2);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .map-button.current {
+            background-color: rgba(255, 235, 59, 0.2);
+            border-color: var(--highlight-color);
+            color: var(--highlight-color);
+        }
+
+        /* NPC系统样式 */
+        .npc-card {
+            background-color: #333;
+            border: 2px solid #555;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .npc-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .npc-name {
+            color: #fff;
+        }
+
+        .no-npc {
+            color: #666;
+            font-style: italic;
+            padding: 10px;
+        }
+
+        /* NPC对话模态框 */
+        #npc-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 150;
+        }
+
+        .npc-modal-content {
+            background: var(--panel-bg);
+            padding: 30px;
+            border: 3px solid var(--npc-color);
+            border-radius: 12px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .npc-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+
+        .npc-modal-icon {
+            font-size: 2rem;
+        }
+
+        .npc-modal-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--npc-color);
+        }
+
+        .npc-dialogue {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.6;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .npc-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .npc-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .npc-action-btn.heal {
+            background: linear-gradient(135deg, #4caf50, #43a047);
+            border-color: #4caf50;
+        }
+
+        .npc-close-btn {
+            background-color: #333;
+            /* border: 2px solid #555; */
+            margin-top: 20px;
+        }
+
+        /* 背包系统样式 */
+        #inventory-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 160;
+        }
+
+        .inventory-modal-content {
+            background: var(--panel-bg);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .inventory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+
+        .inventory-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .inventory-item {
+            background-color: #222;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .inventory-item-base {
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inventory-item:hover {
+            border-color: #ff9800;
+            background-color: #2a2a2a;
+        }
+
+        .inventory-item.heal:hover {
+            border-color: #ff9800;
+            background-color: #2a2a2a;
+        }
+
+        .inventory-item-icon {
+            font-size: 2.5rem;
+        }
+
+        .inventory-item-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .inventory-item-count {
+            font-size: 0.8rem;
+            color: #ff9800;
+            background-color: rgba(255, 152, 0, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .inventory-item-description {
+            color: #888;
+            text-align: center;
+        }
+
+        .inventory-item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .inventory-item-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .inventory-item-btn.use {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #000;
+        }
+
+        .inventory-item-btn.use:hover:not(:disabled) {
+            background-color: #43a047;
+        }
+
+        .inventory-item-btn.equip {
+            background-color: #ff9800;
+            border-color: #ff9800;
+            color: #000;
+        }
+
+        .inventory-item-btn.equip:hover:not(:disabled) {
+            background-color: #f57c00;
+        }
+
+        .inventory-item-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .empty-inventory {
+            color: #666;
+            font-style: italic;
+            padding: 30px;
+            font-size: 1rem;
+        }
+
+        .inventory-close-btn {
+            background-color: #333;
+            border: 2px solid #555;
+            color: #aaa;
+            padding: 12px 30px;
+            font-size: 1rem;
+        }
+
+        .inventory-close-btn:hover:not(:disabled) {
+            background-color: #444;
+            color: #fff;
+        }
+
+        /* 装备槽样式 */
+        .equipment-section {
+            background-color: #222;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .equipment-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+
+        .weapon-slot {
+            background-color: #333;
+            border: 2px dashed #555;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .weapon-slot.has-weapon {
+            border-style: solid;
+            border-color: #ff9800;
+            background-color: rgba(255, 152, 0, 0.1);
+        }
+
+        .empty-slot {
+            color: #666;
+            font-style: italic;
+            font-size: 1rem;
+        }
+
+        .equipped-weapon {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        .equipped-weapon-icon {
+            font-size: 3rem;
+        }
+
+        .equipped-weapon-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .equipped-weapon-name {
+            margin-bottom: 8px;
+        }
+
+        .equipped-weapon-bonus-base {
+            color: var(--text-color);
+        }
+
+        .quality-blue {
+            color: var(--quality-blue-color);
+            border-color: var(--quality-blue-color);
+        }
+
+        .quality-gold {
+            color: #ffff00;
+            border-color: #ffff00;
+        }
+
+        .unequip-btn {
+            background-color: #f44336;
+            border: 1px solid #f44336;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .unequip-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* 日志区域标题栏 */
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: #2a2a2a;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .log-title,
+        .clear-log-btn {
+            color: var(--second-color);
+        }
+
+        .clear-log-btn {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        /* 查看日志按钮（移动端） */
+        #btn-show-log {
+            display: none;
+        }
+
+        /* 关闭日志按钮（移动端） */
+        #btn-close-log {
+            display: none;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            #game-container {
+                flex-direction: column;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            header {
+                gap: 5px;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+            }
+
+            /* 日志容器默认隐藏 */
+            #log-container {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 300;
+
+                background-color: rgba(0, 0, 0, 0.95);
+            }
+
+            /* 日志容器显示时 */
+            #log-container.show {
+                display: flex;
+            }
+
+            /* 查看日志按钮 */
+            #btn-show-log {
+                display: block !important;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                padding: 10px;
+                z-index: 250;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+                background: linear-gradient(135deg, #4caf50, #43a047);
+                border: none;
+            }
+
+            /* 关闭日志按钮 */
+            #btn-close-log {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="game-container">
+        <!-- 左侧游戏区域 -->
+        <div id="game-main">
+            <!-- 头部：玩家状态 -->
+            <header>
+                <div class="stat-item">
+                    <span class="stat-label">❤️ 生命值<span class="stat-value" id="player-hp">100/100</span></span>
+                    <div class="progress-bar">
+                        <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">⚔️ 攻击力</span>
+                    <span class="stat-value" id="player-atk" style="color: #ff5722;">10</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">⭐ 等级: <span class="stat-value" id="player-lv">1</span></span>
+                    <span class="stat-value" id="player-exp">0%</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill exp-fill" id="exp-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">💰 金币</span>
+                    <span class="stat-value" id="player-gold" style="color: #ffd700;">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🎯 暴击率</span>
+                    <span class="stat-value" id="player-crit" style="color: #ff9800;">10%</span>
+                </div>
+                <div class="stat-item">
+                    <button class="primary" id="btn-inventory" style="width: 100%; margin-top: auto;">
+                        🎒 背包
+                    </button>
+                </div>
+            </header>
+
+            <main>
+                <!-- 地图系统 -->
+                <section id="map-section">
+                    <div id="map-title">
+
+                        <span>📍 当前位置：<span id="current-map-name">村庄</span></span>
+                    </div>
+                    <div id="map-buttons">
+                    </div>
+                </section>
+
+                <!-- NPC系统 -->
+                <section id="npc-section">
+                    <div id="npc-title">
+                        <span>👥 NPC列表</span>
+                    </div>
+                    <div id="npc-list">
+                    </div>
+                </section>
+            </main>
+
+            <!-- 战斗模态框 -->
+            <div id="battle-modal">
+                <div class="battle-modal-content">
+                    <div class="battle-status" id="battle-status">战斗进行中...</div>
+                    <div class="battle-compare-section">
+                        <div class="battle-side player-side">
+
+                            <div class="battle-side-title">👤 玩家</div>
+                            <div class="battle-stat-row">
+                                <span class="battle-stat-label">❤️ 生命值</span>
+                                <span class="battle-stat-value" id="battle-player-hp">100/100</span>
+                            </div>
+                            <div class="battle-hp-bar">
+                                <div class="battle-hp-fill player" id="battle-player-hp-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="battle-stat-row" style="margin-top: 15px;">
+                                <span class="battle-stat-label">⚔️ 攻击力</span>
+                                <span class="battle-stat-value" id="battle-player-atk">10</span>
+                            </div>
+                            <div class="battle-stat-row">
+                                <span class="battle-stat-label">🎯 暴击率</span>
+                                <span class="battle-stat-value" id="battle-player-crit">10%</span>
+                            </div>
+                        </div>
+                        <div class="battle-side enemy-side">
+                            <div class="battle-side-title" id="battle-enemy-name">👹 ???</div>
+                            <div class="battle-stat-row">
+                                <span class="battle-stat-label">❤️ 生命值</span>
+                                <span class="battle-stat-value" id="battle-enemy-hp">100/100</span>
+                            </div>
+                            <div class="battle-hp-bar">
+                                <div class="battle-hp-fill enemy" id="battle-enemy-hp-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="battle-stat-row" style="margin-top: 15px;">
+                                <span class="battle-stat-label">⚔️ 攻击力</span>
+                                <span class="battle-stat-value" id="battle-enemy-atk">5</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="battle-actions">
+                        <button class="battle-action-btn attack" id="battle-btn-attack">⚔️ 攻击</button>
+                        <button class="battle-action-btn flee" id="battle-btn-flee">🏃 逃跑</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NPC对话模态框 -->
+            <div id="npc-modal">
+                <div class="npc-modal-content">
+                    <div class="npc-modal-header">
+                        <span class="npc-modal-icon" id="npc-modal-icon">👤</span>
+                        <span class="npc-modal-name" id="npc-modal-name">NPC名称</span>
+                    </div>
+                    <div class="npc-dialogue" id="npc-dialogue">
+                        对话内容
+                    </div>
+                    <div class="npc-actions" id="npc-actions">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 背包模态框 -->
+            <div id="inventory-modal">
+                <div class="inventory-modal-content">
+                    <div class="inventory-header">
+                        <span class="inventory-title">🎒 背包</span>
+                    </div>
+                    <!-- 武器装备槽 -->
+                    <div class="equipment-section">
+                        <div class="equipment-title">⚔️ 武器槽</div>
+                        <div class="weapon-slot" id="weapon-slot">
+                            <div class="empty-slot">空</div>
+                        </div>
+                    </div>
+                    <div class="inventory-grid" id="inventory-grid">
+                    </div>
+                    <button class="inventory-close-btn" id="btn-close-inventory">关闭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧日志区域 -->
+        <div id="log-container">
+            <div class="log-header">
+                <span class="log-title">📜 冒险日志</span>
+                <button class="clear-log-btn" id="btn-clear-log">清空日志</button>
+            </div>
+            <div id="log-section">
+                <div class="log-entry system">欢迎来到冒险世界！</div>
+            </div>
+            <button id="btn-close-log">关闭日志</button>
+        </div>
+
+        <!-- 查看日志按钮（移动端） -->
+        <button id="btn-show-log">📜<br>日志</button>
+    </div>
+
+    <!-- 游戏结束/胜利 模态框 -->
+    <div id="game-over-modal" class="game-over-modal">
+        <div class="game-over-modal-content">
+            <h2 class="game-over-modal-title" id="game-over-modal-title">游戏结束</h2>
+            <p id="game-over-modal-msg">你倒下了...</p>
+            <br>
+            <button class="primary" onclick="game.restart()">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+
+        const MONSTER_CONFIG_STR = `
+怪物名称,血量成长最低,血量成长最高,物攻成长最低,物攻成长最高,经验奖励系数,物品奖励系数
+青蛙,50,70,-10,10,1,1
+松鼠,40,60,45,65,1,1
+兔子,55,75,-10,10,1,1
+蛇,40,60,45,65,1,1
+猴子,40,60,50,70,1,1
+山猫,45,65,-10,10,1,1
+狐狸,40,60,50,70,1,1
+野狗,45,65,50,70,1,1
+`
+
+        const MAP_CONFIG_STR = `
+name,level,description,monster
+揽仙镇,1,仙风道骨的揽仙镇，是修仙者的起点。,
+揽仙镇外,2,揽仙镇郊外，有一些野兽出没。,青蛙:2/松鼠:3
+卧龙坡,7,传说中的卧龙坡，据说有龙气汇聚。,兔子:6/蛇:8
+官道南,10,通往北方的官道南段，危险重重。,猴子:10/山猫:11
+官道北,12,官道北段，更加凶险。,狐狸:13/野狗:14
+天墉城,10,最繁华最热闹同时也是治安最好的城镇。,
+`
+
+        // (a,b,x,y) ：a和b是双向连接，x代表a到b的killThreshold，y代表b到a的killThreshold
+        const MAP_CONNECTION_CONFIG_STR = `
+(揽仙镇,揽仙镇外,0,2)
+(揽仙镇,官道南,0,3)
+(揽仙镇外,卧龙坡,2,3)
+(官道南,官道北,3,3)
+(天墉城,官道北,0,3)
+`
+
+        const NPC_CONFIG_STR = `
+map,name,icon,dialogue,sell_items
+揽仙镇,王老板,💊,欢迎光临！我这里有上好的药材。要来点什么吗？,止血草/一叶草/兰芝草/地云草
+揽仙镇,张老板,⚔️,欢迎光临张氏武器铺！我这里有各种神兵利器。要看看吗？,长枪/铁枪
+`
+
+        const ITEM_CONFIG_STR = `
+name,icon,description,stackable,effect,amount,price,note
+止血草,🌿,使用后恢复100HP,1,heal,100,10,使用后恢复100HP
+一叶草,🍃,使用后恢复200HP,1,heal,200,25,使用后恢复200HP
+兰芝草,🌱,使用后恢复350HP,1,heal,350,45,使用后恢复350HP
+地云草,🌾,使用后恢复600HP,1,heal,600,80,使用后恢复600HP
+`
+
+        const WEAPON_CONFIG_STR = `
+name,icon,description,level,atk,price
+长枪,🔱,一支长枪,1,58,300
+铁枪,🔱,一支铁枪,10,179,600
+`
+
+        const ATTRIBUTE_TABLE = {
+            atk: '攻击力',
+            critRate: '暴击率',
+            maxHp: '气血',
+        }
+
+        const INVENTORY_MAX_SIZE = 20
+        const GOLDEN_MONSTER_RATE = 0.01
+
+        /**
+         * 游戏逻辑核心
+         * 包含：玩家类、怪物生成、战斗逻辑、UI更新
+         */
+
+        // 工具函数
+        function htmlStringToNode(htmlString) {
+            const parser = new DOMParser();
+
+            const doc = parser.parseFromString(htmlString, 'text/html');
+            return doc.body.firstChild; // 返回第一个子节点
+        }
+        const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+        const nextLevelExpMax = (lv) => lv * lv * lv * 5;
+
+        // 解析MAP_CONFIG_STR，生成MAP_CONFIG（合并MAP_METADATA和MONSTER_TYPES）
+        function parseMapConfig(configStr) {
+            const lines = configStr.trim().split('\n');
+            const mapConfig = {};
+
+            // 跳过标题行
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                const parts = line.split(',');
+                if (parts.length < 4) continue;
+                const name = parts[0].trim();
+                const level = parts[1].trim();
+                const description = parts[2].trim();
+                const monsterStr = parts[3].trim();
+                // 解析怪物配置
+                let monsters = [];
+                if (monsterStr) {
+                    monsters = monsterStr.split('/').map(monster => {
+                        const [monsterName, monsterLevel] = monster.split(':');
+                        return {
+                            name: monsterName.trim(),
+                            level: parseInt(monsterLevel.trim())
+                        };
+                    });
+                }
+                mapConfig[name] = {
+                    name: name,
+                    level: level ? parseInt(level) : undefined,
+                    description: description,
+                    monsters: monsters,
+                    connections: {}
+                };
+            }
+
+            return mapConfig;
+        }
+
+        // 解析MAP_CONNECTION_CONFIG_STR，更新MAP_CONFIG中的连接关系
+        function parseMapConnectionConfig(configStr, mapConfig) {
+            const lines = configStr.trim().split('\n');
+            // 解析连接关系
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (!trimmedLine) continue;
+                // 解析格式: (a,b,x,y)
+                const match = trimmedLine.match(/\(([^,]+),([^,]+),(\d+),(\d+)\)/);
+                if (!match) continue;
+                const [, a, b, x, y] = match;
+                const mapA = mapConfig[a];
+                const mapB = mapConfig[b];
+                if (!mapA || !mapB) continue;
+                // 添加双向连接
+                // a到b的连接
+                mapA.connections[b] = {
+                    killThreshold: parseInt(x),
+                    name: b
+                };
+                // b到a的连接
+                mapB.connections[a] = {
+                    killThreshold: parseInt(y),
+                    name: a
+                };
+            }
+            return mapConfig;
+        }
+
+        // 解析MONSTER_CONFIG_STR，生成怪物成长属性配置
+        function parseMonsterConfig(configStr) {
+            const lines = configStr.trim().split('\n');
+
+            const config = {};
+            // 跳过标题行
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const parts = line.split(',');
+                if (parts.length < 7) continue;
+
+                const name = parts[0].trim();
+                config[name] = {
+                    hpGrowthMin: parseInt(parts[1].trim()),
+                    hpGrowthMax: parseInt(parts[2].trim()),
+                    atkGrowthMin: parseInt(parts[3].trim()),
+                    atkGrowthMax: parseInt(parts[4].trim()),
+                    expRewardCoefficient: parseFloat(parts[5].trim()),
+                    goldRewardCoefficient: parseFloat(parts[6].trim())
+                };
+            }
+            return config;
+        }
+
+        // 初始化怪物成长属性配置
+        const MONSTER_GROWTH_CONFIG = parseMonsterConfig(MONSTER_CONFIG_STR);
+        // 初始化地图配置（从MAP_CONFIG_STR和MAP_CONNECTION_CONFIG_STR解析）
+        let MAP_CONFIG = parseMapConfig(MAP_CONFIG_STR);
+        MAP_CONFIG = parseMapConnectionConfig(MAP_CONNECTION_CONFIG_STR, MAP_CONFIG);
+        // 解析ITEM_CONFIG_STR，生成物品配置
+        function parseItemConfig(configStr) {
+            const lines = configStr.trim().split('\n');
+            const config = {};
+
+            // 跳过标题行
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const parts = line.split(',');
+                if (parts.length < 8) continue;
+
+                const name = parts[0].trim();
+                config[name] = {
+                    id: name,
+                    name: name,
+                    icon: parts[1].trim(),
+                    description: parts[2].trim(),
+                    stackable: parts[3].trim() === '1',
+                    effect: parts[4].trim(),
+                    amount: parseInt(parts[5].trim()),
+                    price: parseInt(parts[6].trim()),
+                    note: parts[7].trim()
+                };
+            }
+
+            return config;
+        }
+
+        // 解析WEAPON_CONFIG_STR，生成武器配置
+        function parseWeaponConfig(configStr) {
+            const lines = configStr.trim().split('\n');
+            const config = {};
+
+            // 跳过标题行
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const parts = line.split(',');
+                if (parts.length < 6) continue;
+
+                const name = parts[0].trim();
+                config[name] = {
+                    id: name,
+                    name: name,
+                    icon: parts[1].trim(),
+                    description: parts[2].trim(),
+
+                    type: 'weapon',
+                    stackable: false,
+                    level: parseInt(parts[3].trim()),
+                    levelReq: parseInt(parts[3].trim()),
+                    baseAtk: parseInt(parts[4].trim()),
+                    price: parseInt(parts[5].trim())
+                };
+            }
+
+            return config;
+        }
+
+        // 解析NPC_CONFIG_STR，生成NPC配置
+        function parseNPCConfig(configStr, itemConfigAll) {
+            const lines = configStr.trim().split('\n');
+            const config = {};
+
+            // 跳过标题行
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const parts = line.split(',');
+                if (parts.length < 5) continue;
+
+                const mapName = parts[0].trim();
+                const npcName = parts[1].trim();
+                const icon = parts[2].trim();
+                const dialogue = parts[3].trim();
+                const sellItemsStr = parts[4].trim();
+
+                // 解析sell_items字段（使用/分隔）
+                const sellItems = sellItemsStr.split('/').map(item => item.trim()).filter(item => item);
+
+                // 生成NPC的actions
+                const actions = [];
+                sellItems.forEach(itemName => {
+                    let item = itemConfigAll[itemName];
+                    if (item) {
+                        actions.push({
+                            type: 'buyItem',
+                            itemName: item.name,
+                        });
+                    }
+                });
+
+                const npc = {
+                    id: npcName,
+                    name: npcName,
+                    icon: icon,
+                    dialogue: dialogue,
+                    actions: actions
+                };
+
+                if (!config[mapName]) {
+                    config[mapName] = [];
+                }
+                config[mapName].push(npc);
+            }
+
+            return config;
+        }
+
+        // 初始化物品配置
+        const ITEM_CONFIG_PARSED = parseItemConfig(ITEM_CONFIG_STR);
+        const WEAPON_CONFIG_PARSED = parseWeaponConfig(WEAPON_CONFIG_STR);
+
+        console.log(ITEM_CONFIG_PARSED, WEAPON_CONFIG_PARSED)
+
+        // 合并物品和武器配置（保持向后兼容）
+        const ITEM_CONFIG = { ...ITEM_CONFIG_PARSED, ...WEAPON_CONFIG_PARSED };
+
+        // 初始化NPC配置
+        const NPC_CONFIG = parseNPCConfig(NPC_CONFIG_STR, ITEM_CONFIG);
+        console.log(NPC_CONFIG)
+
+        // 装备品质定义
+        const ITEM_QUALITY = {
+            WHITE: 'white',
+            GOLD: 'gold'
+        };
+
+        // 装备品质配置
+        const QUALITY_CONFIG = {
+            white: {
+                name: '白色',
+                color: '#ffffff',
+
+                borderColor: '#aaaaaa'
+            },
+            gold: {
+                name: '金色',
+                color: '#ffd700',
+                borderColor: '#ffd700'
+            }
+        };
+
+        // 生成金色品质装备的额外属性
+        function generateGoldenItemStats(itemConfig) {
+            const level = itemConfig.level;
+            const stats = [];
+
+            // 可选属性池
+            const availableStats = [
+                {
+                    type: 'maxHp',
+                    name: '最大生命值',
+                    min: level * 20,
+                    max: level * 40
+                },
+                {
+                    type: 'critRate',
+                    name: '暴击率',
+                    min: 5,
+                    max: 30
+                },
+                {
+                    type: 'atk',
+                    name: '攻击力',
+                    min: level * 10,
+
+                    max: level * 20
+                }
+            ];
+
+            // 随机选择3个属性，允许重复但每个属性最多重复一次
+            const selectedStats = [];
+            const statCounts = {}; // 记录每个属性被选中的次数
+
+            for (let i = 0; i < 3; i++) {
+                // 筛选出未被选中或只选中过一次的属性
+                const availableOptions = availableStats.filter(stat => {
+                    const count = statCounts[stat.type] || 0;
+                    return count < 2; // 最多允许重复一次
+                });
+
+                if (availableOptions.length === 0) break;
+
+                const index = randomInt(0, availableOptions.length - 1);
+                const selectedStat = availableOptions[index];
+                selectedStats.push(selectedStat);
+
+                // 记录选中次数
+                statCounts[selectedStat.type] = (statCounts[selectedStat.type] || 0) + 1;
+            }
+
+            // 为每个选中的属性生成随机值
+            selectedStats.forEach(stat => {
+                const value = randomInt(stat.min, stat.max);
+                stats.push({
+                    type: stat.type,
+                    name: stat.name,
+                    value: value
+                });
+            });
+
+            return stats;
+        }
+
+        class Game {
+            constructor() {
+                this.init();
+                this.cacheUI();
+                this.bindEvents();
+                this.updateUI();
+            }
+
+            init() {
+                this.player = {
+                    hp: 0,
+                    lv: 1,
+                    exp: 0,
+                    gold: 0,
+                    inventory: [],
+                    equippedWeapon: null
+                };
+                this.player.hp = this.calculateTotalMaxHp()
+                this.enemy = null;
+                this.inBattle = false;
+
+                this.isAttacking = false;
+                this.currentMap = '揽仙镇';
+                this.mapKillCounts = {};
+                this.battleForConnection = null;
+                this.currentNPC = null;
+                this.initCurrentMapKillCounts(null);
+            }
+
+            cacheUI() {
+                this.ui = {
+                    hp: document.getElementById('player-hp'),
+                    hpBar: document.getElementById('hp-bar'),
+                    lv: document.getElementById('player-lv'),
+                    atk: document.getElementById('player-atk'),
+                    exp: document.getElementById('player-exp'),
+                    expBar: document.getElementById('exp-bar'),
+                    gold: document.getElementById('player-gold'),
+                    crit: document.getElementById('player-crit'),
+                    log: document.getElementById('log-section'),
+                    btnClearLog: document.getElementById('btn-clear-log'),
+                    gameOverModal: document.getElementById('game-over-modal'),
+                    gameOverModalTitle: document.getElementById('game-over-modal-title'),
+                    gameOverModalMsg: document.getElementById('game-over-modal-msg'),
+                    currentMapName: document.getElementById('current-map-name'),
+                    mapButtons: document.getElementById('map-buttons'),
+                    battleModal: document.getElementById('battle-modal'),
+                    battleEnemyName: document.getElementById('battle-enemy-name'),
+                    battlePlayerHp: document.getElementById('battle-player-hp'),
+                    battlePlayerHpFill: document.getElementById('battle-player-hp-fill'),
+                    battlePlayerAtk: document.getElementById('battle-player-atk'),
+                    battlePlayerCrit: document.getElementById('battle-player-crit'),
+                    battleEnemyHp: document.getElementById('battle-enemy-hp'),
+                    battleEnemyHpFill: document.getElementById('battle-enemy-hp-fill'),
+                    battleEnemyAtk: document.getElementById('battle-enemy-atk'),
+                    battleBtnAttack: document.getElementById('battle-btn-attack'),
+                    battleBtnFlee: document.getElementById('battle-btn-flee'),
+                    battleStatus: document.getElementById('battle-status'),
+                    npcModal: document.getElementById('npc-modal'),
+                    npcModalIcon: document.getElementById('npc-modal-icon'),
+                    npcModalName: document.getElementById('npc-modal-name'),
+                    npcDialogue: document.getElementById('npc-dialogue'),
+                    npcActions: document.getElementById('npc-actions'),
+                    npcTitle: document.getElementById('npc-title'),
+                    npcList: document.getElementById('npc-list'),
+
+                    btnInventory: document.getElementById('btn-inventory'),
+                    inventoryModal: document.getElementById('inventory-modal'),
+                    inventoryGrid: document.getElementById('inventory-grid'),
+                    btnCloseInventory: document.getElementById('btn-close-inventory')
+                };
+            }
+
+            // 绑定事件
+            bindEvents() {
+                this.ui.btnClearLog.onclick = () => this.clearLog();
+                this.ui.battleBtnAttack.onclick = () => this.playerAttack();
+                this.ui.battleBtnFlee.onclick = () => this.playerFlee();
+                this.ui.btnInventory.onclick = () => this.openInventory();
+                this.ui.btnCloseInventory.onclick = () => this.closeInventory();
+
+                // 移动端日志按钮事件
+                const btnShowLog = document.getElementById('btn-show-log');
+                const btnCloseLog = document.getElementById('btn-close-log');
+                const logContainer = document.getElementById('log-container');
+
+                btnShowLog.onclick = () => logContainer.classList.add('show');
+                btnCloseLog.onclick = () => logContainer.classList.remove('show');
+            }
+
+            // 日志系统
+            log(msg, type = '') {
+                while (this.ui.log.children.length > 100) {
+                    this.ui.log.firstElementChild.remove()
+                }
+                const div = document.createElement('div');
+                div.className = `log-entry ${type}`;
+                div.innerText = `${msg}`;
+                this.ui.log.appendChild(div);
+                this.ui.log.scrollTop = this.ui.log.scrollHeight;
+            }
+
+            clearLog() {
+                this.ui.log.querySelectorAll('.log-entry').forEach(entry => entry.remove());
+                this.log('日志已清空', 'system');
+            }
+
+            // UI更新
+            updateUI() {
+                this.updatePlayerStats();
+                this.updateBattleModalUI();
+                this.updateMapUI();
+                this.updateInventoryButton();
+            }
+
+            updatePlayerStats() {
+                const totalMaxHp = this.calculateTotalMaxHp();
+                const maxExp = this.calculateMaxExp()
+                const hpPercent = (this.player.hp / totalMaxHp) * 100;
+                const expPercent = (this.player.exp / maxExp) * 100;
+                const totalAtk = this.calculateTotalAttack();
+                const totalCrit = this.calculateTotalCritRate();
+
+                this.ui.hp.innerText = `${this.player.hp}/${totalMaxHp}`;
+                this.ui.hpBar.style.width = `${hpPercent}%`;
+                this.ui.lv.innerText = this.player.lv;
+                this.ui.atk.innerText = totalAtk;
+
+                this.ui.exp.innerText = `${this.player.exp}/${maxExp}（${Math.floor(expPercent)}%）`;
+                this.ui.expBar.style.width = `${expPercent}%`;
+                this.ui.gold.innerText = this.player.gold;
+                this.ui.crit.innerText = `${totalCrit}%`;
+            }
+
+            highlightStat(elementId) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    const statItem = element.closest('.stat-item');
+                    if (statItem) {
+                        statItem.classList.add('highlight');
+                        setTimeout(() => statItem.classList.remove('highlight'), 500);
+                    }
+                }
+            }
+
+            // 背包系统
+            updateInventoryButton() {
+                this.ui.btnInventory.disabled = this.inBattle;
+            }
+
+            calculateTotalAttack() {
+                let totalAtk = 100 + this.player.lv * 50;
+                if (this.player.equippedWeapon) {
+                    // 武器对象直接包含baseAtk属性
+                    const baseConfig = WEAPON_CONFIG_PARSED[this.player.equippedWeapon.itemId]
+                    totalAtk += baseConfig.baseAtk;
+                    // 加上装备的额外攻击力（支持重复属性）
+                    if (this.player.equippedWeapon.extraStats) {
+                        const atkStats = this.player.equippedWeapon.extraStats.filter(s => s.type === 'atk');
+                        atkStats.forEach(atkStat => {
+                            totalAtk += atkStat.value;
+                        });
+                    }
+                }
+                return totalAtk;
+            }
+
+            // 计算总暴击率
+            calculateTotalCritRate() {
+                let totalCrit = 0;
+                if (this.player.equippedWeapon && this.player.equippedWeapon.extraStats) {
+                    const critStats = this.player.equippedWeapon.extraStats.filter(s => s.type === 'critRate');
+                    critStats.forEach(critStat => {
+                        totalCrit += critStat.value;
+                    });
+                }
+                return totalCrit;
+            }
+
+            // 计算总最大生命值
+            calculateTotalMaxHp() {
+                let totalMaxHp = 200 + this.player.lv * 80;
+                if (this.player.equippedWeapon && this.player.equippedWeapon.extraStats) {
+                    const hpStats = this.player.equippedWeapon.extraStats.filter(s => s.type === 'maxHp');
+                    hpStats.forEach(hpStat => {
+                        totalMaxHp += hpStat.value;
+                    });
+                }
+                return totalMaxHp;
+            }
+
+            calculateMaxExp() {
+                let lv = this.player.lv
+                return nextLevelExpMax(lv + 1)
+            }
+
+
+            openInventory() {
+                if (this.inBattle) {
+                    this.log("战斗中无法打开背包！", 'system');
+                    return;
+                }
+                this.updateInventoryUI();
+                this.updateWeaponSlot();
+                this.ui.inventoryModal.style.display = 'flex';
+            }
+
+            updateWeaponSlot() {
+                const weaponSlot = document.getElementById('weapon-slot');
+                if (!weaponSlot) return;
+
+                if (this.player.equippedWeapon) {
+                    const weapon = this.player.equippedWeapon;
+                    const baseInfo = WEAPON_CONFIG_PARSED[weapon.itemId]
+                    weaponSlot.className = 'weapon-slot has-weapon';
+
+                    let quality = '';
+                    let extraStatsText = '';
+
+                    if (weapon.extraStats) {
+                        quality = 'quality-gold';
+                        extraStatsText = '<br>';
+                        weapon.extraStats.forEach(stat => {
+                            extraStatsText += `<span class="quality-blue">${ATTRIBUTE_TABLE[stat.type]} +${stat.value}</span> `;
+                        });
+                    }
+
+                    weaponSlot.innerHTML = `
+                <div class="equipped-weapon">
+                    <span class="equipped-weapon-icon">${baseInfo.icon}</span>
+                    <div class="equipped-weapon-info">
+                        <span class="equipped-weapon-name ${quality}">${baseInfo.name}</span>
+                        <span>武器等级   ${weapon.levelReq ?? baseInfo.level}</span>
+                        <span>基础攻击力 +${baseInfo.baseAtk}</span>
+                        ${extraStatsText}
+                    </div>
+                    <button class="unequip-btn" onclick="game.unequipWeapon()">卸下</button>
+                </div>
+            `;
+                } else {
+                    weaponSlot.className = 'weapon-slot';
+                    weaponSlot.innerHTML = '<div class="empty-slot">空</div>';
+                }
+            }
+
+            closeInventory() {
+                this.ui.inventoryModal.style.display = 'none';
+            }
+
+            updateInventoryUI() {
+                this.ui.inventoryGrid.innerHTML = '';
+                const inventory = this.player.inventory;
+
+                if (inventory.length === 0) {
+                    this.ui.inventoryGrid.innerHTML = '<div class="empty-inventory">背包是空的...</div>';
+                    return;
+                }
+
+                inventory.forEach((item, index) => {
+                    const itemConfig = ITEM_CONFIG[item.itemId];
+                    if (!itemConfig) return;
+
+
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'inventory-item';
+
+                    let canUse = false;
+                    let actionLabel = '使用';
+                    let actionType = 'use';
+
+                    let extraStatsText = '';
+                    if (item.extraStats) {
+                        extraStatsText = '<div style="color: #7f7fff;">';
+                        item.extraStats.forEach(stat => {
+                            extraStatsText += `${ATTRIBUTE_TABLE[stat.type]}+${stat.value} `;
+                        });
+                        extraStatsText += '</div>';
+                    }
+
+                    if (itemConfig.type === 'weapon') {
+                        canUse = this.player.lv >= itemConfig.levelReq;
+                        actionLabel = '佩戴';
+                        actionType = 'equip';
+                    } else if (itemConfig.effect === 'heal') {
+                        canUse = this.player.hp < this.calculateTotalMaxHp();
+                        actionType = 'use';
+                    }
+
+                    itemElement.innerHTML = `
+                <div class="inventory-item-base">
+                    <span class="inventory-item-icon">${itemConfig.icon}</span>
+                    <span class="inventory-item-name quality-${item.quality}">${itemConfig.name}</span>
+                    <span class="inventory-item-description">${itemConfig.description}</span>
+                    ${itemConfig.stackable ? `<span class="inventory-item-count">x${item.count}</span>` : ''}
+                    ${extraStatsText}
+                </div>
+                <div class="inventory-item-actions">
+                    <button class="inventory-item-btn ${actionType}" ${!canUse ? 'disabled' : ''}>${actionLabel}</button>
+                    <button class="inventory-item-btn sell">出售($${itemConfig.price / 5})</button>
+                </div>
+            `;
+
+                    const actionBtn = itemElement.querySelector(`.${actionType}`);
+                    actionBtn.onclick = () => {
+                        if (actionType === 'equip') {
+                            this.equipWeapon(index);
+                        } else {
+                            this.useItem(index);
+                        }
+                    };
+                    const sellBtn = itemElement.querySelector(`button.sell`)
+                    if (sellBtn) {
+                        sellBtn.onclick = () => this.sellItem(index);
+                    }
+
+                    this.ui.inventoryGrid.appendChild(itemElement);
+                });
+            }
+
+            addItem(newItem) {
+                const itemConfig = ITEM_CONFIG[newItem.itemId];
+                if (!itemConfig) return false;
+                console.log('newItem', newItem)
+                let addNew = true;
+
+                // 根据是否可叠加判断处理逻辑
+                if (itemConfig.stackable) {
+                    // 可叠加物品：遍历 inventory 查找是否已存在相同 itemId
+                    const existingItem = this.player.inventory.find(item => item.itemId === newItem.itemId);
+                    if (existingItem) {
+                        // 已存在，直接添加数量
+                        existingItem.count += newItem.count;
+                        addNew = false;
+                    }
+                }
+
+                if (addNew) {
+                    if (this.player.inventory.length >= INVENTORY_MAX_SIZE) {
+                        this.log(`你的背包已满，无法装下【${itemConfig.name}】`)
+                        return false
+                    }
+                    if (!newItem.id) {
+                        newItem.id = this.generateUniqueId()
+                    }
+                    this.player.inventory.push(newItem)
+                }
+
+                this.log(`你获得了【${itemConfig.name}】${itemConfig.stackable ? `x${newItem.count}` : ''}`, 'system');
+                return true;
+            }
+
+            // 生成唯一 ID
+            generateUniqueId() {
+                return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            }
+
+            removeItem(index, count = 1) {
+                if (index < 0 || index >= this.player.inventory.length) return false;
+
+                const item = this.player.inventory[index];
+                const itemConfig = ITEM_CONFIG[item.itemId];
+
+                if (itemConfig.stackable) {
+                    item.count -= count;
+                    if (item.count <= 0) {
+                        this.player.inventory.splice(index, 1);
+                    }
+                } else {
+                    this.player.inventory.splice(index, 1);
+                }
+                return true;
+            }
+
+            useItem(index) {
+                if (index < 0 || index >= this.player.inventory.length) return;
+
+                const item = this.player.inventory[index];
+                const itemConfig = ITEM_CONFIG[item.itemId];
+
+                if (!itemConfig) return;
+
+                switch (itemConfig.effect) {
+                    case 'heal':
+                        const maxHp = this.calculateTotalMaxHp()
+                        if (this.player.hp >= maxHp) {
+                            this.log("你的生命值已经满了！", 'system');
+                            return;
+                        }
+                        const oldHp = this.player.hp;
+                        this.player.hp = Math.min(maxHp, this.player.hp + itemConfig.amount);
+                        const healed = this.player.hp - oldHp;
+                        this.removeItem(index, 1);
+
+                        this.log(`使用了【${itemConfig.name}】，恢复了${healed}点生命值。`, 'system');
+                        this.highlightStat('player-hp');
+                        break;
+                }
+
+                this.updateInventoryUI();
+                this.updateUI();
+            }
+
+            sellItem(index) {
+                if (index < 0 || index >= this.player.inventory.length) return;
+
+                const item = this.player.inventory[index];
+                const itemConfig = ITEM_CONFIG[item.itemId];
+
+                if (!itemConfig) return;
+
+                this.removeItem(index)
+                let sellPrice = Math.floor(itemConfig.price / 5)
+                this.player.gold += sellPrice
+
+                this.log(`你出售了【${itemConfig.name}】，得到${sellPrice}个金币。`, 'system');
+
+                this.updateInventoryUI();
+                this.updateUI();
+            }
+
+            updatePlayerStat() {
+                this.player.hp = Math.min(this.player.hp, this.calculateTotalMaxHp())
+            }
+
+            equipWeapon(index) {
+                if (index < 0 || index >= this.player.inventory.length) return;
+
+                const item = this.player.inventory[index];
+                const weapon = ITEM_CONFIG[item.itemId];
+
+
+                if (!weapon || weapon.type !== 'weapon') return;
+
+                if (this.player.lv < item.levelReq) {
+                    this.log(`你的等级不足！需要达到${item.levelReq}级才能佩戴【${weapon.name}】。`, 'system');
+                    return;
+                }
+
+                let oldWeapon = this.player.equippedWeapon;
+                // 创建武器对象，包含唯一id和所有属性
+                this.player.equippedWeapon = item;
+                this.log(`装备了【${weapon.name}】。`, 'system');
+                this.removeItem(index, 1);
+
+                if (oldWeapon) {
+                    this.addItem(oldWeapon);
+                }
+
+                this.updatePlayerStat()
+
+                this.highlightStat('player-atk');
+                this.highlightStat('player-crit');
+                this.updateWeaponSlot();
+                this.updateInventoryUI();
+                this.updateUI();
+            }
+
+            unequipWeapon() {
+                if (!this.player.equippedWeapon) return;
+
+                const weapon = this.player.equippedWeapon;
+                if (!this.addItem(weapon)) {
+                    return
+                }
+                this.player.equippedWeapon = null;
+
+                const baseInfo = WEAPON_CONFIG_PARSED[weapon.itemId]
+                this.log(`卸下了 ${baseInfo.name}。`, 'system');
+
+                this.updatePlayerStat()
+
+                this.highlightStat('player-atk');
+                this.highlightStat('player-crit');
+                this.updateWeaponSlot();
+
+                this.updateInventoryUI();
+                this.updateUI();
+            }
+
+            // 战斗系统
+            updateBattleModalUI() {
+                if (!this.enemy || !this.inBattle) return;
+
+                const totalMaxHp = this.calculateTotalMaxHp();
+                const playerHpPercent = Math.max(0, (this.player.hp / totalMaxHp) * 100);
+                const enemyHpPercent = Math.max(0, (this.enemy.hp / this.enemy.maxHp) * 100);
+                const totalAtk = this.calculateTotalAttack();
+                const totalCrit = this.calculateTotalCritRate();
+
+                this.ui.battlePlayerHp.innerText = `${this.player.hp}/${totalMaxHp}`;
+                this.ui.battlePlayerHpFill.style.width = `${playerHpPercent}%`;
+                this.ui.battlePlayerAtk.innerText = totalAtk;
+                this.ui.battlePlayerCrit.innerText = `${totalCrit}%`;
+
+                // 判断是否为金色怪物，设置不同的显示样式
+                this.ui.battleEnemyName.innerText = `👹 ${this.enemy.name}（Lv.${this.enemy.level}）`;
+                if (this.enemy.isGolden) {
+                    this.ui.battleEnemyName.classList.add('gold-enemy');
+                } else {
+                    this.ui.battleEnemyName.classList.remove('gold-enemy');
+                }
+
+                this.ui.battleEnemyHp.innerText = `${this.enemy.hp}/${this.enemy.maxHp}`;
+                this.ui.battleEnemyHpFill.style.width = `${enemyHpPercent}%`;
+                this.ui.battleEnemyAtk.innerText = this.enemy.atk;
+            }
+
+            showBattleModal() {
+                this.ui.battleModal.style.display = 'flex';
+            }
+
+            closeBattleModal() {
+                this.ui.battleModal.style.display = 'none';
+                // 移除金色怪物样式
+                if (this.ui.battleEnemyName) {
+                    this.ui.battleEnemyName.classList.remove('gold-enemy');
+                }
+            }
+
+            explore() {
+                const mapConfig = MAP_CONFIG[this.currentMap];
+                const mapMonsters = mapConfig ? mapConfig.monsters : [];
+                if (!mapMonsters || mapMonsters.length === 0) {
+                    this.log("这里没有怪物出没。", 'system');
+                    return;
+                }
+
+                const template = mapMonsters[randomInt(0, mapMonsters.length - 1)];
+                const growthConfig = MONSTER_GROWTH_CONFIG[template.name];
+
+                if (!growthConfig) {
+                    return;
+                }
+
+                // 判断是否为金色怪物
+                const isGolden = Math.random() < GOLDEN_MONSTER_RATE;
+
+                // 金色怪物属性提升50%
+                const multiplier = isGolden ? 4 : 1;
+
+                // 根据成长属性范围随机取值（0%-60%）
+
+                const hpGrowthRange = growthConfig.hpGrowthMax - growthConfig.hpGrowthMin;
+                const hpGrowthPercent = Math.random() * 0.6; // 0%-60%
+                const hpGrowth = Math.floor(growthConfig.hpGrowthMin + hpGrowthRange * hpGrowthPercent);
+
+                const atkGrowthRange = growthConfig.atkGrowthMax - growthConfig.atkGrowthMin;
+                const atkGrowthPercent = Math.random() * 0.6; // 0%-60%
+                const atkGrowth = Math.floor(growthConfig.atkGrowthMin + atkGrowthRange * atkGrowthPercent);
+
+                // 计算怪物属性
+                // 血量计算公式：50 + 等级 * 血量成长
+                const baseHp = 50 + template.level * hpGrowth;
+                // 攻击力计算公式：10 + 等级 * max(0, 攻击力成长)
+                const baseAtk = 10 + template.level * Math.max(0, atkGrowth);
+
+                // 计算掉落金币：（怪物等级 * 物品奖励系数）±50%，向上取整
+                const goldBase = template.level * growthConfig.goldRewardCoefficient;
+                const goldVariance = goldBase * 0.5;
+                let gold = Math.ceil(goldBase + randomInt(-goldVariance, goldVariance));
+
+                // 计算获得经验：（怪物等级 * 经验奖励系数 * 10）±10%，向上取整
+                const expBase = template.level * growthConfig.expRewardCoefficient * 10;
+                const expVariance = expBase * 0.1;
+                let exp = Math.ceil(expBase + randomInt(-expVariance, expVariance));
+
+                this.enemy = {
+                    name: template.name,
+                    level: template.level,
+                    maxHp: Math.floor(baseHp * multiplier),
+                    hp: 0,
+                    atk: baseAtk,
+                    exp: Math.floor(exp * multiplier * 2),
+                    gold: Math.floor(gold * multiplier * 2),
+                    isGolden: isGolden
+                };
+                this.enemy.hp = this.enemy.maxHp;
+
+                this.inBattle = true;
+
+                if (isGolden) {
+                    this.log(`你四处探索，遇到了一只传说中的【${this.enemy.name}】！`, 'legendary');
+                } else {
+                    this.log(`你四处探索，遇到了一只野生的【${this.enemy.name}】！`, 'system');
+                }
+
+                this.showBattleModal();
+
+                this.updateUI();
+            }
+
+            playerAttack() {
+                if (!this.inBattle || this.isAttacking) return;
+
+                this.isAttacking = true;
+                const isCrit = Math.random() < (this.calculateTotalCritRate() / 100);
+                const totalAtk = this.calculateTotalAttack();
+                let damage = Math.floor(totalAtk * (Math.random() * 0.1 + 0.95));
+
+                if (isCrit) {
+                    damage = Math.floor(damage * 1.5);
+
+                    this.log(`你发起了致命一击！对【${this.enemy.name}】造成了${damage}点伤害！`, 'critical');
+                } else {
+                    this.log(`你攻击了【${this.enemy.name}】，造成了${damage}点伤害。`, 'player-action');
+                }
+
+                this.enemy.hp -= damage;
+
+                if (this.enemy.hp <= 0) {
+                    this.winBattle();
+                } else {
+                    setTimeout(() => this.enemyTurn(), 600);
+                }
+
+                this.isAttacking = false;
+                this.updateUI();
+            }
+
+            enemyTurn() {
+                if (!this.inBattle) return;
+
+                const damage = Math.max(1, Math.floor(this.enemy.atk - (this.player.lv * 0.5)));
+                this.player.hp -= damage;
+                this.log(`【${this.enemy.name}】反击了！你受到了${damage}点伤害。`, 'enemy-action');
+
+                if (this.player.hp <= 0) {
+                    this.player.hp = 0;
+                    this.inBattle = false;
+                    this.isAttacking = false;
+                    this.closeBattleModal()
+                    this.gameOver();
+                }
+
+                this.updateUI();
+            }
+
+            winBattle() {
+                this.inBattle = false;
+                this.isAttacking = false;
+
+                let attenuation = this.player.lv - 2 > this.enemy.level
+                let exp = this.enemy.exp
+                let gold = this.enemy.gold
+                if (attenuation) {
+                    exp = Math.ceil(exp / 10);
+                    gold = Math.ceil(gold / 10);
+                }
+
+                this.log(`你击败了【${this.enemy.name}】！获得${exp}经验和${gold}个金币。`, 'system');
+                if (attenuation) {
+                    this.log(`由于你的等级远大于怪物等级，奖励被衰减。`, 'system');
+                }
+                // 判断是否为金色怪物
+                if (this.enemy.isGolden) {
+                    this.log(`你击败了传说中的【${this.enemy.name}】！获得 ${exp} 经验和 ${gold} 金币。`, 'legendary');
+
+                    const dropLevel = Math.max(1, Math.floor(this.enemy.level / 10) * 10);
+                    const eligibleWeapons = Object.values(WEAPON_CONFIG_PARSED).filter(item => {
+                        return item.level === dropLevel;
+                    });
+
+                    if (eligibleWeapons.length > 0) {
+                        // 随机选择一个符合等级的装备
+                        const itemConfig = eligibleWeapons[randomInt(0, eligibleWeapons.length - 1)];
+                        const extraStats = generateGoldenItemStats(itemConfig);
+                        this.addItem({
+                            itemId: itemConfig.id,
+                            quality: ITEM_QUALITY.GOLD,
+
+                            extraStats: extraStats
+                        });
+                    }
+                }
+
+                this.player.exp += exp;
+                this.player.gold += gold;
+
+                this.updateKillProgress();
+                this.checkLevelUp();
+                this.enemy = null;
+                this.closeBattleModal();
+                this.updateUI();
+            }
+
+            updateKillProgress() {
+                if (this.battleForConnection === null) return;
+
+                this.mapKillCounts[this.battleForConnection]++;
+                this.decreaseOtherMapProgress(this.battleForConnection);
+
+                const mapConfig = MAP_CONFIG[this.currentMap];
+                const connection = mapConfig.connections[this.battleForConnection];
+                const threshold = connection.killThreshold;
+                const killCount = this.mapKillCounts[this.battleForConnection];
+
+                if (threshold > 0 && killCount === threshold) {
+                    this.log(`恭喜！你已击败${threshold}只怪物，解锁了前往【${connection.name}】的道路！`, 'critical');
+                }
+
+                this.battleForConnection = null;
+            }
+
+            decreaseOtherMapProgress(targetMapId) {
+                const connections = MAP_CONFIG[this.currentMap].connections;
+                for (const [otherMapId, connection] of Object.entries(connections)) {
+                    if (otherMapId === targetMapId || connection.killThreshold === 0) continue;
+                    this.mapKillCounts[otherMapId] = Math.max(0, (this.mapKillCounts[otherMapId] || 0) - 1);
+                }
+            }
+
+            playerFlee() {
+                if (!this.inBattle || this.isAttacking) {
+                    this.log("正在战斗中，无法逃跑！", 'system');
+                    return;
+                }
+
+                if (Math.random() > 0.5) {
+                    this.log(`你狼狈地逃离了【${this.enemy.name}】！`, 'system');
+                    this.inBattle = false;
+                    this.enemy = null;
+                    this.battleForConnection = null;
+                    this.closeBattleModal();
+                } else {
+                    this.log(`逃跑失败！被【${this.enemy.name}】拦住了去路。`, 'enemy-action');
+                    this.isAttacking = true;
+                    setTimeout(() => {
+                        this.enemyTurn();
+                        this.isAttacking = false;
+                    }, 500);
+                }
+                this.updateUI();
+            }
+
+            gameOver(reason = 'die') {
+                let title = '你牺牲了'
+                let titleColor = 'red'
+                let submsg = `你在第${this.player.lv}级倒下了。\n你的冒险到此结束。`;
+                if (reason === 'win') {
+
+                    title = '你胜利了'
+                    titleColor = 'green'
+                    submsg = '恭喜你到达天墉城！'
+                }
+
+                this.ui.gameOverModalTitle.innerText = title;
+                this.ui.gameOverModalTitle.style.color = titleColor;
+                this.ui.gameOverModalMsg.innerText = submsg
+                this.ui.gameOverModal.style.display = 'flex';
+            }
+
+            checkLevelUp() {
+                let maxExp = this.calculateMaxExp()
+                while (this.player.exp >= maxExp) {
+                    this.player.lv++;
+                    this.player.exp -= maxExp;
+                    maxExp = this.calculateMaxExp()
+
+                    // 升级时恢复到最大生命值（包含装备加成）
+                    this.player.hp = this.calculateTotalMaxHp();
+
+                    this.log(`恭喜！你升级到了 LV ${this.player.lv}！状态已回满。`, 'critical');
+                    ['player-lv', 'player-hp', 'player-atk', 'player-exp'].forEach(id => this.highlightStat(id));
+                }
+            }
+
+            // 地图系统
+            updateMapUI() {
+                const currentMapConfig = MAP_CONFIG[this.currentMap];
+                this.ui.currentMapName.innerText = currentMapConfig.name;
+
+                this.ui.mapButtons.innerHTML = '';
+                this.renderExploreButton();
+                this.renderMapButtons(currentMapConfig.connections);
+                this.updateNPCUI();
+            }
+
+            renderExploreButton() {
+                const mapConfig = MAP_CONFIG[this.currentMap];
+                const mapMonsters = mapConfig ? mapConfig.monsters : [];
+                if (!mapMonsters || mapMonsters.length === 0) return;
+
+                const button = document.createElement('button');
+                button.className = 'map-button primary';
+                button.innerHTML = '<span>⚔️</span> <span>寻找怪物</span>';
+                button.onclick = () => this.explore();
+                button.disabled = this.inBattle;
+                this.ui.mapButtons.appendChild(button);
+            }
+
+            renderMapButtons(connections) {
+                for (const [targetMapId, connection] of Object.entries(connections)) {
+                    const button = document.createElement('button');
+                    button.className = 'map-button';
+
+                    const killCount = this.mapKillCounts[targetMapId] || 0;
+                    const threshold = connection.killThreshold;
+                    const canTravel = killCount >= threshold;
+
+                    if (this.currentMap === targetMapId) {
+                        button.className += ' current';
+                        button.innerHTML = `<span>🏠</span> <span>${connection.name}</span>`;
+                        button.disabled = true;
+
+                    } else if (canTravel) {
+                        button.className += ' unlocked';
+                        const label = threshold === 0 ? `前往${connection.name}` : `前往${connection.name}（${killCount}/${threshold}）`;
+                        button.innerHTML = `<span>➡️</span> <span>${label}</span>`;
+                        button.onclick = () => this.travelTo(targetMapId);
+                    } else {
+                        button.innerHTML = `<span>⚔️</span> <span>前往${connection.name}（${killCount}/${threshold}）</span>`;
+                        button.onclick = () => this.tryTravelTo(targetMapId);
+                    }
+
+                    this.ui.mapButtons.appendChild(button);
+                }
+            }
+
+            travelTo(targetMapId) {
+                if (this.inBattle) {
+                    this.log("战斗中无法移动！", 'system');
+                    return;
+                }
+
+                const connection = MAP_CONFIG[this.currentMap].connections[targetMapId];
+                if ((this.mapKillCounts[targetMapId] || 0) < connection.killThreshold) {
+                    this.log(`需要击败${connection.killThreshold}只怪物才能前往【${connection.name}】！`, 'system');
+                    return;
+                }
+
+                let previousMap = this.currentMap;
+                this.currentMap = targetMapId;
+                this.initCurrentMapKillCounts(previousMap);
+
+                const newMapConfig = MAP_CONFIG[targetMapId];
+                this.log(`你来到了【${newMapConfig.name}】。${newMapConfig.description}`, 'system');
+                this.updateUI();
+
+                if (targetMapId === '天墉城') {
+                    this.gameOver('win')
+                }
+            }
+
+            tryTravelTo(targetMapId) {
+                if (this.inBattle) {
+                    this.log("战斗中无法移动！", 'system');
+                    return;
+                }
+
+                const connection = MAP_CONFIG[this.currentMap].connections[targetMapId];
+                if ((this.mapKillCounts[targetMapId] || 0) >= connection.killThreshold) {
+                    this.travelTo(targetMapId);
+                    return;
+                }
+
+                this.battleForConnection = targetMapId;
+                this.log(`你试图前往【${connection.name}】，但路上遇到了怪物！`, 'system');
+                this.explore();
+            }
+
+            initCurrentMapKillCounts(previousMap) {
+                this.mapKillCounts = {};
+
+                if (previousMap) {
+                    const returnConnection = MAP_CONFIG[this.currentMap].connections[previousMap];
+                    if (returnConnection) {
+                        this.mapKillCounts[previousMap] = returnConnection.killThreshold;
+                    }
+                }
+
+
+                for (const [targetMapId] of Object.entries(MAP_CONFIG[this.currentMap].connections)) {
+                    if (!this.mapKillCounts[targetMapId]) {
+                        this.mapKillCounts[targetMapId] = 0;
+                    }
+                }
+            }
+
+            // NPC系统
+            updateNPCUI() {
+                const npcs = NPC_CONFIG[this.currentMap] || [];
+                this.ui.npcList.innerHTML = '';
+
+                if (npcs.length === 0) {
+                    this.ui.npcList.innerHTML = '<div class="no-npc">此地空无一人...</div>';
+                    return;
+                }
+
+                npcs.forEach(npc => {
+                    const card = document.createElement('div');
+                    card.className = 'npc-card';
+                    card.innerHTML = `
+                <span class="npc-icon">${npc.icon}</span>
+                <div class="npc-info">
+                    <span class="npc-name">${npc.name}</span>
+
+                </div>
+            `;
+                    card.onclick = () => this.openNPCDialog(npc);
+                    this.ui.npcList.appendChild(card);
+                });
+            }
+
+            openNPCDialog(npc) {
+                this.currentNPC = npc;
+                this.ui.npcModalIcon.innerText = npc.icon;
+                this.ui.npcModalName.innerText = npc.name;
+                this.ui.npcDialogue.innerText = npc.dialogue;
+                this.ui.npcActions.innerHTML = '';
+
+                npc.actions.filter(action => action.type === 'buyItem').forEach(action => {
+                    const item = ITEM_CONFIG[action.itemName]
+                    let label = htmlStringToNode(`
+                        <button class="npc-action-btn">
+                        ${item.icon} ${item.name} ${item.description}（${item.price}金币）
+                        </button>
+                    `)
+                    label.onclick = () => this.npcTransaction(action, action.type);
+                    this.ui.npcActions.appendChild(label)
+                })
+
+                const closeButton = document.createElement('button');
+                closeButton.className = 'npc-action-btn npc-close-btn';
+                closeButton.innerText = '离开';
+                closeButton.onclick = () => this.closeNPCDialog();
+                this.ui.npcActions.appendChild(closeButton);
+
+                this.ui.npcModal.style.display = 'flex';
+            }
+
+            closeNPCDialog() {
+                this.ui.npcModal.style.display = 'none';
+                this.currentNPC = null;
+            }
+
+            npcTransaction(action, type) {
+                // 验证物品配置是否存在
+                const itemConfig = ITEM_CONFIG[action.itemName];
+                if (!itemConfig) {
+                    this.ui.npcDialogue.innerText = '抱歉，这个物品暂时无法购买。';
+
+                    return;
+                }
+
+                const itemPrice = itemConfig.price
+
+                // 验证金币是否足够
+                if (this.player.gold < itemPrice) {
+                    this.ui.npcDialogue.innerText = '哎呀，你的金币不够啊！去赚点钱再来吧！';
+                    this.log(`金币不足`, 'system');
+                    return;
+                }
+
+                // 商店购买的物品统一为白色品质
+                if (!this.addItem({
+                    itemId: itemConfig.id,
+                    count: 1,
+                    quality: ITEM_QUALITY.WHITE
+                })) {
+                    this.log(`购买失败`, 'system');
+                    return
+                }
+
+                // 扣除金币
+                this.player.gold -= itemPrice;
+
+                // 记录交易日志
+                this.log(`你在【${this.currentNPC.name}】处花费了${itemPrice}个金币购买了【${itemConfig.name}】。`, 'system');
+
+                // 更新NPC对话和UI
+                this.ui.npcDialogue.innerText = '购买成功';
+                this.highlightStat('player-gold');
+                this.updateUI();
+            }
+
+            // 游戏重启
+            restart() {
+                this.init();
+                this.ui.log.innerHTML = '';
+                this.log("新的冒险开始了...", 'system');
+                this.ui.gameOverModal.style.display = 'none';
+                this.updateUI();
+            }
+        }
+
+        function renderEquipHtml(equip) {
+
+        }
+
+        // 初始化游戏
+        const game = new Game();
+    </script>
+</body>
+
+</html>
